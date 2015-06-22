@@ -8,6 +8,7 @@ public class CharacterMove2 : MonoBehaviour {
 	public float moveForce = 365f;
 	public float maxSpeed = 5f;
 	public float jumpForce = 1000f;
+
 	public Transform groundCheck;
 	
 	
@@ -37,6 +38,9 @@ public class CharacterMove2 : MonoBehaviour {
 			doubleJump = false;
 			rb2d.AddForce(new Vector2(0f, jumpForce));
 		}
+
+
+
 	}
 	
 	void FixedUpdate()
@@ -55,6 +59,13 @@ public class CharacterMove2 : MonoBehaviour {
 			Flip ();
 		else if (h < 0 && facingRight)
 			Flip ();
+
+		if (Input.GetButtonDown("Fire1")){
+			for (int i = 0; i < 10; i++){
+				moveForce = 2000;
+				maxSpeed = 10;
+			}
+		}
 		
 	}
 	
@@ -73,6 +84,12 @@ public class CharacterMove2 : MonoBehaviour {
 		{
 			grounded = true;
 			doubleJump = false;
+		}
+
+		if(col.gameObject.tag == "Killer")
+		{
+			Victor.pl1Win = true;
+			Application.LoadLevel(2);
 		}
 	}
 	
