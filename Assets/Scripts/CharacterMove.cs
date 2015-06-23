@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class CharacterMove : MonoBehaviour {
 	
@@ -8,7 +9,10 @@ public class CharacterMove : MonoBehaviour {
 	public float moveForce = 365f;
 	public float maxSpeed = 5f;
 	public float jumpForce = 1000f;
+	public static float player1Charge;
 
+	public Slider energy1;
+	
 	public Transform groundCheck;
 	
 	
@@ -16,6 +20,9 @@ public class CharacterMove : MonoBehaviour {
 	private bool doubleJump = false;
 	//private Animator anim;
 	private Rigidbody2D rb2d;
+
+	public static bool rightBump1;
+	public static bool leftBump1;
 	
 	
 
@@ -23,6 +30,11 @@ public class CharacterMove : MonoBehaviour {
 	{
 		//anim = GetComponent<Animator>();
 		rb2d = GetComponent<Rigidbody2D>();
+		rightBump1 = true;
+		leftBump1 = true;
+
+		player1Charge = 100f;
+		energy1.value = 100f;
 	}
 	
 
@@ -38,6 +50,21 @@ public class CharacterMove : MonoBehaviour {
 			doubleJump = false;
 			rb2d.AddForce(new Vector2(0f, jumpForce));
 		}
+		if (Input.GetButtonDown("Fire1") && player1Charge >= 30){
+			player1Charge = player1Charge -30f;
+			energy1.value -= 30f;
+
+			if (facingRight == true){
+				rb2d.AddForce(new Vector2(jumpForce * 1.5f, 0f));
+			} else {
+				rb2d.AddForce(new Vector2(-jumpForce * 1.5f, 0f));
+			}
+		}
+
+		if (player1Charge < 100) {
+			player1Charge = player1Charge + 0.2f;
+			energy1.value += 0.2f;
+		}
 
 	}
 	
@@ -47,23 +74,16 @@ public class CharacterMove : MonoBehaviour {
 		
 		//anim.SetFloat("Speed", Mathf.Abs(h));
 		
-		if (h * rb2d.velocity.x < maxSpeed)
-			rb2d.AddForce(Vector2.right * h * moveForce);
+		//if (h * rb2d.velocity.x < maxSpeed && grounded)
+			//rb2d.AddForce(Vector2.right * h * moveForce);
 		
-		if (Mathf.Abs (rb2d.velocity.x) > maxSpeed)
-			rb2d.velocity = new Vector2(Mathf.Sign (rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
+		//if (Mathf.Abs (rb2d.velocity.x) > maxSpeed && grounded)
+			//rb2d.velocity = new Vector2(Mathf.Sign (rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
 		
-		if (h > 0 && !facingRight)
+		if (h > 0 && !facingRight) 
 			Flip ();
 		else if (h < 0 && facingRight)
 			Flip ();
-
-		if (Input.GetButtonDown("Fire1")){
-			for (int i = 0; i < 10; i++){
-				moveForce = 2000;
-				maxSpeed = 10;
-				}
-		}
 
 	}
 	
@@ -89,7 +109,47 @@ public class CharacterMove : MonoBehaviour {
 			Victor.pl1Win = false;
 			Application.LoadLevel(2);
 		}
+
+
+		if (col.gameObject.tag == "Player") 
+		{
+			bool leftBump2 = CharacterMove2.GetLeft2();
+			bool rightBump2 = CharacterMove2.GetRight2();
+
+			if (leftBump2 == true){
+				Debug.Log("bölö");
+				rb2d.AddForce(new Vector2(-jumpForce, 0f));
+				//leftBump2 = false;
+				//CharacterMove2.setLeft2(leftBump2);
+			}
+			if (rightBump2 == true){
+				Debug.Log("bölö");
+				rb2d.AddForce(new Vector2(jumpForce, 0f));
+				//rightBump2 = false;
+				//CharacterMove2.setRight2(rightBump2);
+			}
+		}
 	}
 
+	public static bool GetRight1()
+	{
+		return rightBump1;
+	}
+	
+	public static bool GetLeft1()
+	{
+		return leftBump1;
+	}
 
+	public static void setRight1(bool tempRight)
+	{
+		rightBump1 = tempRight;
+	}
+
+	public static void setLeft1(bool tempLeft)
+	{
+		leftBump1 = tempLeft;
+	}
+	
+	
 }
