@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class CharacterMove2 : MonoBehaviour {
 	
-	[HideInInspector] public bool facingRight = true;
+	[HideInInspector] public bool facingRight = false;
 	[HideInInspector] public bool jump = false;
 	public float moveForce = 365f;
 	public float maxSpeed = 5f;
@@ -44,19 +44,23 @@ public class CharacterMove2 : MonoBehaviour {
 	void Update () 
 	{
 		
-		if (Input.GetButtonDown("Jump2") && grounded)
+		if (Input.GetButtonDown("Jump2") && grounded && player2Charge >= 10)
 		{
 			grounded = false;
 			doubleJump = true;
 			rb2d.AddForce(new Vector2(0f, jumpForce));
-		} else if (Input.GetButtonDown("Jump2") && !grounded && doubleJump == true){
+			player2Charge = player2Charge -10f;
+			energy2.value -= 10f;
+		} else if (Input.GetButtonDown("Jump2") && !grounded && doubleJump == true && player2Charge >= 10){
 			doubleJump = false;
 			rb2d.AddForce(new Vector2(0f, jumpForce));
+			player2Charge = player2Charge -10f;
+			energy2.value -= 10f;
 		}
 
-		if (Input.GetButtonDown("Fire2") && player2Charge >= 30){
-			player2Charge = player2Charge -30f;
-			energy2.value -= 30f;
+		if (Input.GetButtonDown("Fire2") && player2Charge >= 20){
+			player2Charge = player2Charge -20f;
+			energy2.value -= 20f;
 
 			if (facingRight == true){
 				rb2d.AddForce(new Vector2(jumpForce * 1.5f, 0f));
@@ -70,8 +74,8 @@ public class CharacterMove2 : MonoBehaviour {
 		}
 
 		if (player2Charge < 100) {
-			player2Charge = player2Charge + 0.2f;
-			energy2.value += 0.2f;
+			player2Charge = player2Charge + 0.1f;
+			energy2.value += 0.1f;
 		}
 
 	}

@@ -41,18 +41,23 @@ public class CharacterMove : MonoBehaviour {
 	void Update () 
 	{
 		
-		if (Input.GetButtonDown("Jump") && grounded)
+		if (Input.GetButtonDown("Jump") && grounded && player1Charge >= 10)
 		{
 			grounded = false;
 			doubleJump = true;
 			rb2d.AddForce(new Vector2(0f, jumpForce));
-		} else if (Input.GetButtonDown("Jump") && !grounded && doubleJump == true){
+			player1Charge = player1Charge -10f;
+			energy1.value -= 10f;
+		} else if (Input.GetButtonDown("Jump") && !grounded && doubleJump == true && player1Charge >= 10){
 			doubleJump = false;
 			rb2d.AddForce(new Vector2(0f, jumpForce));
+			player1Charge = player1Charge -10f;
+			energy1.value -= 10f;
 		}
-		if (Input.GetButtonDown("Fire1") && player1Charge >= 30){
-			player1Charge = player1Charge -30f;
-			energy1.value -= 30f;
+
+		if (Input.GetButtonDown("Fire1") && player1Charge >= 20){
+			player1Charge = player1Charge -20f;
+			energy1.value -= 20f;
 
 			if (facingRight == true){
 				rb2d.AddForce(new Vector2(jumpForce * 1.5f, 0f));
@@ -62,8 +67,8 @@ public class CharacterMove : MonoBehaviour {
 		}
 
 		if (player1Charge < 100) {
-			player1Charge = player1Charge + 0.2f;
-			energy1.value += 0.2f;
+			player1Charge = player1Charge + 0.1f;
+			energy1.value += 0.1f;
 		}
 
 	}
