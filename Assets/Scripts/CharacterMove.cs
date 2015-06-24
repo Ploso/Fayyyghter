@@ -8,8 +8,9 @@ public class CharacterMove : MonoBehaviour {
 	[HideInInspector] public bool jump = false;
 	public float moveForce = 365f;
 	public float maxSpeed = 5f;
-	public float jumpForce = 1000f;
+	public float jumpForce;
 	public static float player1Charge;
+	public int player1Selection;
 
 	public Slider energy1;
 	
@@ -18,46 +19,80 @@ public class CharacterMove : MonoBehaviour {
 	
 	private bool grounded = false;
 	private bool doubleJump = false;
-	//private Animator anim;
 	private Rigidbody2D rb2d;
 
-	public static bool rightBump1;
-	public static bool leftBump1;
-	
-	
+	public float jumpCost;
+	public float boostCost;
+
+	public PhysicsMaterial2D phMt;
+
+	public bool shield;
+
 
 	void Awake () 
 	{
-		//anim = GetComponent<Animator>();
-		rb2d = GetComponent<Rigidbody2D>();
-		rightBump1 = true;
-		leftBump1 = true;
+		rb2d = GetComponent<Rigidbody2D> ();
+		energy1 = GameObject.Find ("Slider1").GetComponent<Slider> ();
 
 		player1Charge = 100f;
 		energy1.value = 100f;
+
+		player1Selection = SelectionScrip.GetPl1Selection ();
+
+		if (player1Selection == 1) {
+			jumpForce = 7000f;
+		} else {
+			jumpForce = 6000f;
+		}
+
+		if (player1Selection == 2){
+			boostCost = 15f;
+		} else{
+			boostCost = 20f;
+		} 
+		if (player1Selection == 2){
+			jumpCost = 1f;
+		} else{
+			jumpCost = 10f;
+		} 
+
+		if (player1Selection == 3) {
+			phMt.bounciness = 0.9f;
+		} else {
+			phMt.bounciness = 0.6f;
+		}
+
+		if (player1Selection == 4) {
+			shield = true;
+		} else {
+			shield = false;
+		}
+
 	}
 	
 
 	void Update () 
 	{
 		
-		if (Input.GetButtonDown("Jump") && grounded && player1Charge >= 10)
+		if (Input.GetButtonDown("Jump") && grounded && player1Charge >= jumpCost)
 		{
 			grounded = false;
 			doubleJump = true;
 			rb2d.AddForce(new Vector2(0f, jumpForce));
-			player1Charge = player1Charge -10f;
-			energy1.value -= 10f;
-		} else if (Input.GetButtonDown("Jump") && !grounded && doubleJump == true && player1Charge >= 10){
+			player1Charge = player1Charge - jumpCost;
+			energy1.value -= jumpCost;
+
+		} else if (Input.GetButtonDown("Jump") && !grounded && doubleJump == true && player1Charge >= jumpCost){
 			doubleJump = false;
 			rb2d.AddForce(new Vector2(0f, jumpForce));
-			player1Charge = player1Charge -10f;
-			energy1.value -= 10f;
+			player1Charge = player1Charge - jumpCost;
+			energy1.value -= jumpCost;
 		}
 
-		if (Input.GetButtonDown("Fire1") && player1Charge >= 20){
-			player1Charge = player1Charge -20f;
-			energy1.value -= 20f;
+		if (Input.GetButtonDown("Fire1") && player1Charge >= boostCost){
+
+			player1Charge = player1Charge - boostCost;
+			energy1.value -= boostCost;
 
 			if (facingRight == true){
 				rb2d.AddForce(new Vector2(jumpForce * 1.5f, 0f));
@@ -76,14 +111,6 @@ public class CharacterMove : MonoBehaviour {
 	void FixedUpdate()
 	{
 		float h = Input.GetAxis("Horizontal");
-		
-		//anim.SetFloat("Speed", Mathf.Abs(h));
-		
-		//if (h * rb2d.velocity.x < maxSpeed && grounded)
-			//rb2d.AddForce(Vector2.right * h * moveForce);
-		
-		//if (Mathf.Abs (rb2d.velocity.x) > maxSpeed && grounded)
-			//rb2d.velocity = new Vector2(Mathf.Sign (rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
 		
 		if (h > 0 && !facingRight) 
 			Flip ();
@@ -111,50 +138,18 @@ public class CharacterMove : MonoBehaviour {
 
 		if(col.gameObject.tag == "Killer")
 		{
-			Victor.pl1Win = false;
-			Application.LoadLevel(2);
-		}
-
-
-		if (col.gameObject.tag == "Player") 
-		{
-			bool leftBump2 = CharacterMove2.GetLeft2();
-			bool rightBump2 = CharacterMove2.GetRight2();
-
-			if (leftBump2 == true){
-				Debug.Log("bölö");
-				rb2d.AddForce(new Vector2(-jumpForce, 0f));
-				//leftBump2 = false;
-				//CharacterMove2.setLeft2(leftBump2);
-			}
-			if (rightBump2 == true){
-				Debug.Log("bölö");
-				rb2d.AddForce(new Vector2(jumpForce, 0f));
-				//rightBump2 = false;
-				//CharacterMove2.setRight2(rightBump2);
+			if (shield == true){
+				shield = false;
+			} else{
+				Victor.pl1Win = false;
+				Application.LoadLevel(2);
 			}
 		}
+
+
 	}
 
-	public static bool GetRight1()
-	{
-		return rightBump1;
-	}
-	
-	public static bool GetLeft1()
-	{
-		return leftBump1;
-	}
 
-	public static void setRight1(bool tempRight)
-	{
-		rightBump1 = tempRight;
-	}
-
-	public static void setLeft1(bool tempLeft)
-	{
-		leftBump1 = tempLeft;
-	}
 	
 	
 }

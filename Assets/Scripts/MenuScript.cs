@@ -16,7 +16,7 @@ public class MenuScript : MonoBehaviour {
 	}
 
 	public void StartGame(){
-		Application.LoadLevel (1);
+		Application.LoadLevel (3);
 	}
 
 }
