@@ -19,6 +19,7 @@ public class CharacterMove2 : MonoBehaviour {
 	
 	private bool grounded = false;
 	private bool doubleJump = false;
+	private bool infinijump = false;
 
 	private Rigidbody2D rb2d;
 
@@ -32,6 +33,7 @@ public class CharacterMove2 : MonoBehaviour {
 
 	public bool shield;
 
+	public GameObject shieldIcon;
 	
 	void Awake () 
 	{
@@ -47,9 +49,7 @@ public class CharacterMove2 : MonoBehaviour {
 		player2Selection = SelectionScrip.GetPl2Selection ();
 
 		if (player2Selection == 1){
-			jumpForce = 7000f;
-		} else {
-			jumpForce = 6000f;
+			infinijump = true;
 		}
 
 		if (player2Selection == 2){
@@ -64,15 +64,26 @@ public class CharacterMove2 : MonoBehaviour {
 		} 
 
 		if (player2Selection == 3) {
-			phMt.bounciness = 0.9f;
+			rb2d.mass = 40;
+			phMt.friction = 0.25f;
+			phMt.bounciness = 0.95f;
+			jumpForce = 8000f;
+			rb2d.gravityScale = 1.5f;
 		} else {
 			phMt.bounciness = 0.6f;
 		}
 
 		if (player2Selection == 4) {
+			Instantiate (shieldIcon, new Vector2(-7.6f, 3.2f), Quaternion.identity);
 			shield = true;
 		} else {
 			shield = false;
+		}
+
+		if (player2Selection == 5){
+			jumpForce = 7000f;
+		} else {
+			jumpForce = 6000f;
 		}
 	}
 	
@@ -80,21 +91,23 @@ public class CharacterMove2 : MonoBehaviour {
 	void Update () 
 	{
 		
-		if (Input.GetButtonDown("Jump2") && grounded && player2Charge >= jumpCost)
+		if (Input.GetButtonDown("Jump2") && grounded && player2Charge >= jumpCost && Pauser.pause == false)
 		{
 			grounded = false;
 			doubleJump = true;
 			rb2d.AddForce(new Vector2(0f, jumpForce));
 			player2Charge = player2Charge - jumpCost;
 			energy2.value -= jumpCost;
-		} else if (Input.GetButtonDown("Jump2") && !grounded && doubleJump == true && player2Charge >= jumpCost){
-			doubleJump = false;
+		} else if (Input.GetButtonDown("Jump2") && !grounded && doubleJump == true && player2Charge >= jumpCost && Pauser.pause == false){
+			if (!infinijump){
+				doubleJump = false;
+			}
 			rb2d.AddForce(new Vector2(0f, jumpForce));
 			player2Charge = player2Charge -jumpCost;
 			energy2.value -= jumpCost;
 		}
 
-		if (Input.GetButtonDown("Fire2") && player2Charge >= boostCost){
+		if (Input.GetButtonDown("Fire2") && player2Charge >= boostCost && Pauser.pause == false){
 			player2Charge = player2Charge - boostCost;
 			energy2.value -= boostCost;
 
@@ -110,8 +123,8 @@ public class CharacterMove2 : MonoBehaviour {
 		}
 
 		if (player2Charge < 100) {
-			player2Charge = player2Charge + 0.1f;
-			energy2.value += 0.1f;
+			player2Charge = player2Charge + 0.15f;
+			energy2.value += 0.15f;
 		}
 
 	}
@@ -148,11 +161,21 @@ public class CharacterMove2 : MonoBehaviour {
 
 		if(col.gameObject.tag == "Killer")
 		{
+			int win1temp;
+			win1temp = Spawner.GetWin1();
+			
 			if (shield == true){
+				IconDestroyer.Boom();
 				shield = false;
 			} else{
-				Victor.pl1Win = true;
-				Application.LoadLevel(2);
+				if (win1temp == 2){
+					Victor.pl1Win = true;
+					Application.LoadLevel(2);
+				} else{
+					win1temp++;
+					Spawner.SetWin1(win1temp);
+					Application.LoadLevel(1);
+				}
 			}
 		}
 

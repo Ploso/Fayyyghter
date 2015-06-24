@@ -7,6 +7,8 @@ public class Spawner : MonoBehaviour {
 
 	public GameObject[] player1Hero;
 
+	public static int win1;
+
 	void Start () {
 		player1HeroSelect = SelectionScrip.GetPl1Selection ();
 
@@ -16,5 +18,15 @@ public class Spawner : MonoBehaviour {
 
 	void Update () {
 	
+	}
+
+	public static int GetWin1 ()
+	{
+		return win1;
+	}
+
+	public static void SetWin1(int tempWin)
+	{
+		win1 = tempWin;
 	}
 }

@@ -29,5 +29,7 @@ public class Victor : MonoBehaviour {
 	public void toMenu()
 	{
 		Application.LoadLevel (0);
+		Spawner.SetWin1(0);
+		Spawner2.SetWin2(0);
 	}
 }

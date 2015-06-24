@@ -6,6 +6,8 @@ public class Spawner2 : MonoBehaviour {
 	public int player2HeroSelect;
 
 	public GameObject[] player2Hero;
+
+	public static int win2;
 	
 	void Start () {
 		player2HeroSelect = SelectionScrip.GetPl2Selection ();
@@ -16,5 +18,15 @@ public class Spawner2 : MonoBehaviour {
 	
 	void Update () {
 		
+	}
+
+	public static int GetWin2 ()
+	{
+		return win2;
+	}
+	
+	public static void SetWin2(int tempWin)
+	{
+		win2 = tempWin;
 	}
 }
