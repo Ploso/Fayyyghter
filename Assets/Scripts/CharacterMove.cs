@@ -30,9 +30,17 @@ public class CharacterMove : MonoBehaviour {
 	public bool shield;
 	
 	public GameObject shieldIcon;
+	public GameObject floorProp;
+	public GameObject pum;
+	public GameObject pum2;
+
+	public static bool dieded1;
 
 	void Awake () 
 	{
+
+		dieded1 = false;
+
 		Flip ();
 
 		rb2d = GetComponent<Rigidbody2D> ();
@@ -52,7 +60,7 @@ public class CharacterMove : MonoBehaviour {
 		} else{
 			boostCost = 20f;
 		} 
-		if (player1Selection == 2){
+		if (player1Selection == 1){
 			jumpCost = 1f;
 		} else{
 			jumpCost = 10f;
@@ -61,7 +69,6 @@ public class CharacterMove : MonoBehaviour {
 		if (player1Selection == 3) {
 			rb2d.mass = 40;
 			phMt.bounciness = 0.95f;
-			phMt.friction = 0.25f;
 			jumpForce = 8000f;
 			rb2d.gravityScale = 1.5f;
 		} else {
@@ -77,6 +84,7 @@ public class CharacterMove : MonoBehaviour {
 
 		if (player1Selection == 5) {
 			jumpForce = 8000f;
+			phMt.friction = 1f;
 		} else {
 			jumpForce = 6000f;
 		}
@@ -111,14 +119,20 @@ public class CharacterMove : MonoBehaviour {
 
 			if (facingRight == true){
 				rb2d.AddForce(new Vector2(jumpForce * 1.5f, 0f));
+				if (player1Selection == 6) {
+					Instantiate (floorProp, new Vector2 (transform.position.x - 1, transform.position.y), Quaternion.identity);
+				}
 			} else {
 				rb2d.AddForce(new Vector2(-jumpForce * 1.5f, 0f));
+				if (player1Selection == 6) {
+					Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y), Quaternion.identity);
+				}
 			}
 		}
 
 		if (player1Charge < 100) {
-			player1Charge = player1Charge + 0.15f;
-			energy1.value += 0.15f;
+			player1Charge = player1Charge + 0.2f;
+			energy1.value += 0.2f;
 		}
 
 	}
@@ -151,28 +165,58 @@ public class CharacterMove : MonoBehaviour {
 			doubleJump = false;
 		}
 
+		if(col.gameObject.tag == "Player2")
+		{
+			if (facingRight == true){
+				Instantiate (pum, new Vector2(transform.position.x + 0.5f, transform.position.y), Quaternion.identity);
+			} else {
+				Instantiate (pum, new Vector2(transform.position.x - 0.5f, transform.position.y), Quaternion.identity);
+			}
+		}
+
 		if(col.gameObject.tag == "Killer")
 		{
 			int win2temp;
+			bool diededTemp;
 			win2temp = Spawner2.GetWin2();
+			diededTemp = CharacterMove2.dieded2;
 
 			if (shield == true){
 				IconDestroyer.Boom();
 				shield = false;
 			} else{
-				if (win2temp == 2){
-				Victor.pl1Win = false;
-				Application.LoadLevel(2);
-				} else{
+				if (win2temp == 2 && diededTemp == false){
+					Instantiate (pum2, transform.position, Quaternion.identity);
+					dieded1 = true;
+					Victor.pl1Win = false;
+					transform.position = new Vector2 (100, 100);
+					Invoke ("EndGame", 1f);
+				} else if ((win2temp < 2 && diededTemp == false)){
+					Instantiate (pum2, transform.position, Quaternion.identity);
+					dieded1 = true;
 					win2temp++;
 					Spawner2.SetWin2(win2temp);
-					Application.LoadLevel(1);
+					transform.position = new Vector2 (100, 100);
+					Invoke ("EndRound", 1f);
+				} else {
+					Instantiate (pum, transform.position, Quaternion.identity);
 				}
 			}
 		}
 
 
 	}
+
+	void EndRound()
+	{
+		Application.LoadLevel(1);
+	}
+	
+	void EndGame()
+	{
+		Application.LoadLevel(2);
+	}
+
 
 
 	

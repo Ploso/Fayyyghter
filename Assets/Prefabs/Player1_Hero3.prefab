@@ -101,6 +101,9 @@ MonoBehaviour:
   phMt: {fileID: 6200000, guid: 329d7ad1542885b4f9c9c96f2516b5dc, type: 2}
   shield: 0
   shieldIcon: {fileID: 100574, guid: cf18b2ed1cd20d243b76aa7d7e41e92d, type: 2}
+  floorProp: {fileID: 107954, guid: 1b2d9ec8d924f404da744730f7eadcf6, type: 2}
+  pum: {fileID: 151418, guid: cf91f8e0e08d52243a2381e4a2ac2e8c, type: 2}
+  pum2: {fileID: 104486, guid: e34e3ec5df234a141a33e808f03243dd, type: 2}
 --- !u!212 &21226296
 SpriteRenderer:
   m_ObjectHideFlags: 1

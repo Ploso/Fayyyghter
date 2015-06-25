@@ -23,9 +23,6 @@ public class CharacterMove2 : MonoBehaviour {
 
 	private Rigidbody2D rb2d;
 
-	public static bool rightBump2;
-	public static bool leftBump2;
-
 	public float jumpCost;
 	public float boostCost;
 
@@ -34,14 +31,18 @@ public class CharacterMove2 : MonoBehaviour {
 	public bool shield;
 
 	public GameObject shieldIcon;
+	public GameObject floorProp;
+	public GameObject pum;
+	public GameObject pum2;
+
+	public static bool dieded2;
 	
 	void Awake () 
 	{
+		dieded2 = false;
+
 		rb2d = GetComponent<Rigidbody2D>();
 		energy2 = GameObject.Find ("Slider2").GetComponent<Slider> ();
-
-		rightBump2 = true;
-		leftBump2 = true;
 
 		player2Charge = 100;
 		energy2.value = 100;
@@ -57,7 +58,7 @@ public class CharacterMove2 : MonoBehaviour {
 		} else{
 			boostCost = 20f;
 		} 
-		if (player2Selection == 2){
+		if (player2Selection == 1){
 			jumpCost = 1f;
 		} else{
 			jumpCost = 10f;
@@ -65,7 +66,6 @@ public class CharacterMove2 : MonoBehaviour {
 
 		if (player2Selection == 3) {
 			rb2d.mass = 40;
-			phMt.friction = 0.25f;
 			phMt.bounciness = 0.95f;
 			jumpForce = 8000f;
 			rb2d.gravityScale = 1.5f;
@@ -82,6 +82,7 @@ public class CharacterMove2 : MonoBehaviour {
 
 		if (player2Selection == 5){
 			jumpForce = 7000f;
+			phMt.friction = 1f;
 		} else {
 			jumpForce = 6000f;
 		}
@@ -111,20 +112,25 @@ public class CharacterMove2 : MonoBehaviour {
 			player2Charge = player2Charge - boostCost;
 			energy2.value -= boostCost;
 
+
 			if (facingRight == true){
 				rb2d.AddForce(new Vector2(jumpForce * 1.5f, 0f));
-				rightBump2 = true;
+				if (player2Selection == 6) {
+					Instantiate (floorProp, new Vector2 (transform.position.x - 1, transform.position.y), Quaternion.identity);
+				}
 
 			} else {
 				rb2d.AddForce(new Vector2(-jumpForce * 1.5f, 0f));
-				leftBump2 = true;
+				if (player2Selection == 6) {
+					Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y), Quaternion.identity);
+				}
 
 			}
 		}
 
 		if (player2Charge < 100) {
-			player2Charge = player2Charge + 0.15f;
-			energy2.value += 0.15f;
+			player2Charge = player2Charge + 0.2f;
+			energy2.value += 0.2f;
 		}
 
 	}
@@ -159,28 +165,58 @@ public class CharacterMove2 : MonoBehaviour {
 			doubleJump = false;
 		}
 
+		if(col.gameObject.tag == "Player")
+		{
+			if (facingRight == true){
+				Instantiate (pum, new Vector2(transform.position.x + 0.5f, transform.position.y), Quaternion.identity);
+			} else {
+				Instantiate (pum, new Vector2(transform.position.x - 0.5f, transform.position.y), Quaternion.identity);
+			}
+		}
+
 		if(col.gameObject.tag == "Killer")
 		{
+		
+			bool diededTemp;
 			int win1temp;
 			win1temp = Spawner.GetWin1();
-			
+			diededTemp = CharacterMove.dieded1;
+
 			if (shield == true){
 				IconDestroyer.Boom();
 				shield = false;
 			} else{
-				if (win1temp == 2){
+				if (win1temp == 2 && diededTemp == false){
+					Instantiate (pum2, transform.position, Quaternion.identity);
+					dieded2 = true;
 					Victor.pl1Win = true;
-					Application.LoadLevel(2);
-				} else{
+					transform.position = new Vector2 (100, 100);
+					Invoke ("EndGame", 1f);
+				} else if (win1temp < 2 && diededTemp == false){
+					Instantiate (pum2, transform.position, Quaternion.identity);
+					dieded2 = true;
 					win1temp++;
 					Spawner.SetWin1(win1temp);
-					Application.LoadLevel(1);
+					transform.position = new Vector2 (100, 100);
+					Invoke ("EndRound", 1f);
+				} else{
+					Instantiate (pum, transform.position, Quaternion.identity);
 				}
 			}
 		}
 
 
 
+	}
+
+	void EndRound()
+	{
+		Application.LoadLevel(1);
+	}
+
+	void EndGame()
+	{
+		Application.LoadLevel(2);
 	}
 	
 

@@ -6,5 +6,5 @@ PhysicsMaterial2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Ukko1Bounce
-  friction: .25
-  bounciness: .949999988
+  friction: 1
+  bounciness: .600000024
