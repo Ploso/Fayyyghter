@@ -25,6 +25,21 @@ public class SelectionScrip : MonoBehaviour {
 
 	private bool player1Selects = true;
 
+	public AudioClip ayyy;
+	public AudioClip roar;
+	public AudioClip leeroy;
+	public AudioClip ghost;
+	public AudioClip drake;
+	public AudioClip skeletal;
+
+	public AudioSource s_ayyy;
+	public AudioSource s_roar;
+	public AudioSource s_leeroy;
+	public AudioSource s_ghost;
+	public AudioSource s_drake;
+	public AudioSource s_skeletal;
+
+
 	void Start () {
 		hero1Selected = false;
 		hero2Selected = false;
@@ -82,10 +97,12 @@ public class SelectionScrip : MonoBehaviour {
 			hero1Selected = true;
 			player1Selection = 1;
 			player1Selects = false;
+			s_ayyy.PlayOneShot (ayyy);
 		} else if (player1Selects == false) {
 			hero1Selected = true;
 			player2Selection = 1;
-			Application.LoadLevel(1);
+			s_ayyy.PlayOneShot (ayyy);
+			Invoke ("GameOn", 2f);
 		}
 	}
 
@@ -95,10 +112,12 @@ public class SelectionScrip : MonoBehaviour {
 			hero2Selected = true;
 			player1Selection = 2;
 			player1Selects = false;
+			s_roar.PlayOneShot (roar);
 		} else if (player1Selects == false) {
 			hero2Selected = true;
 			player2Selection = 2;
-			Application.LoadLevel(1);
+			s_roar.PlayOneShot (roar);
+			Invoke ("GameOn", 2f);
 		}
 	}
 
@@ -108,10 +127,12 @@ public class SelectionScrip : MonoBehaviour {
 			hero3Selected = true;
 			player1Selection = 3;
 			player1Selects = false;
+			s_leeroy.PlayOneShot (leeroy);
 		} else if (player1Selects == false) {
 			hero3Selected = true;
 			player2Selection = 3;
-			Application.LoadLevel(1);
+			s_leeroy.PlayOneShot (leeroy);
+			Invoke ("GameOn", 2f);
 		}
 	}
 
@@ -121,10 +142,12 @@ public class SelectionScrip : MonoBehaviour {
 			hero4Selected = true;
 			player1Selection = 4;
 			player1Selects = false;
+			s_ghost.PlayOneShot (ghost);
 		} else if (player1Selects == false) {
 			hero4Selected = true;
 			player2Selection = 4;
-			Application.LoadLevel(1);
+			s_ghost.PlayOneShot (ghost);
+			Invoke ("GameOn", 2f);
 		}
 	}
 
@@ -134,10 +157,12 @@ public class SelectionScrip : MonoBehaviour {
 			hero5Selected = true;
 			player1Selection = 5;
 			player1Selects = false;
+			s_drake.PlayOneShot (drake);
 		} else if (player1Selects == false) {
 			hero5Selected = true;
 			player2Selection = 5;
-			Application.LoadLevel(1);
+			s_drake.PlayOneShot (drake);
+			Invoke ("GameOn", 2f);
 		}
 	}
 
@@ -147,10 +172,12 @@ public class SelectionScrip : MonoBehaviour {
 			hero6Selected = true;
 			player1Selection = 6;
 			player1Selects = false;
+			s_skeletal.PlayOneShot (skeletal);
 		} else if (player1Selects == false) {
 			hero6Selected = true;
 			player2Selection = 6;
-			Application.LoadLevel(1);
+			s_skeletal.PlayOneShot (skeletal);
+			Invoke ("GameOn", 2f);
 		}
 	}
 
@@ -161,5 +188,9 @@ public class SelectionScrip : MonoBehaviour {
 	public static int GetPl2Selection()
 	{
 		return player2Selection;
+	}
+	public void GameOn()
+	{
+		Application.LoadLevel(1);
 	}
 }

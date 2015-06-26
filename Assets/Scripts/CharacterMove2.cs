@@ -17,7 +17,7 @@ public class CharacterMove2 : MonoBehaviour {
 	public Transform groundCheck;
 	
 	
-	private bool grounded = false;
+	private bool grounded = true;
 	private bool doubleJump = false;
 	private bool infinijump = false;
 
@@ -59,7 +59,7 @@ public class CharacterMove2 : MonoBehaviour {
 			boostCost = 20f;
 		} 
 		if (player2Selection == 1){
-			jumpCost = 1f;
+			jumpCost = 5f;
 		} else{
 			jumpCost = 10f;
 		} 
@@ -69,8 +69,14 @@ public class CharacterMove2 : MonoBehaviour {
 			phMt.bounciness = 0.95f;
 			jumpForce = 8000f;
 			rb2d.gravityScale = 1.5f;
+			phMt.friction = 0.01f;
+		} else if (player2Selection == 5) {
+			jumpForce = 8000f;
+			phMt.friction = 1f;
 		} else {
+			phMt.friction = 0.1f;
 			phMt.bounciness = 0.6f;
+			jumpForce = 6000f;
 		}
 
 		if (player2Selection == 4) {
@@ -80,12 +86,6 @@ public class CharacterMove2 : MonoBehaviour {
 			shield = false;
 		}
 
-		if (player2Selection == 5){
-			jumpForce = 7000f;
-			phMt.friction = 1f;
-		} else {
-			jumpForce = 6000f;
-		}
 	}
 	
 	
@@ -129,8 +129,8 @@ public class CharacterMove2 : MonoBehaviour {
 		}
 
 		if (player2Charge < 100) {
-			player2Charge = player2Charge + 0.2f;
-			energy2.value += 0.2f;
+			player2Charge = player2Charge + 0.25f;
+			energy2.value += 0.25f;
 		}
 
 	}
