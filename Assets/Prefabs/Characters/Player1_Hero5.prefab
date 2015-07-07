@@ -12,7 +12,7 @@ GameObject:
   - 50: {fileID: 5074534}
   - 114: {fileID: 11456694}
   - 61: {fileID: 6109886}
-  - 95: {fileID: 9526200}
+  - 95: {fileID: 9510884}
   m_Layer: 0
   m_Name: Player1_Hero5
   m_TagString: Player
@@ -60,7 +60,7 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: .421282887, y: 1.17467999}
---- !u!95 &9526200
+--- !u!95 &9510884
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 1
@@ -69,7 +69,7 @@ Animator:
   m_GameObject: {fileID: 123316}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 01e70628731d6a04aaa567a58bb022a4, type: 2}
+  m_Controller: {fileID: 9100000, guid: 375b5bc88b6a4274b8ec2c0e529050c0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -128,7 +128,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: a0b3a42eaed6043409c464ad06d25ad3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a24169bd2be298e499336467854e539f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:
