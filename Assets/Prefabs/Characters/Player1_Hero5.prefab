@@ -12,7 +12,7 @@ GameObject:
   - 50: {fileID: 5074534}
   - 114: {fileID: 11456694}
   - 61: {fileID: 6109886}
-  - 95: {fileID: 9510884}
+  - 95: {fileID: 9572550}
   m_Layer: 0
   m_Name: Player1_Hero5
   m_TagString: Player
@@ -60,7 +60,7 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: .421282887, y: 1.17467999}
---- !u!95 &9510884
+--- !u!95 &9572550
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 1
@@ -104,6 +104,7 @@ MonoBehaviour:
   floorProp: {fileID: 107954, guid: 1b2d9ec8d924f404da744730f7eadcf6, type: 2}
   pum: {fileID: 151418, guid: cf91f8e0e08d52243a2381e4a2ac2e8c, type: 2}
   pum2: {fileID: 104486, guid: e34e3ec5df234a141a33e808f03243dd, type: 2}
+  hitbox: {fileID: 187894, guid: 99d67bff5d5a380458c566e354c13a96, type: 2}
 --- !u!212 &21294400
 SpriteRenderer:
   m_ObjectHideFlags: 1

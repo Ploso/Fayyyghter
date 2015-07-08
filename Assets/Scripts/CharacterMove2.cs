@@ -36,6 +36,8 @@ public class CharacterMove2 : MonoBehaviour {
 	public GameObject pum2;
 
 	public static bool dieded2;
+
+	private Animator anim;
 	
 	void Awake () 
 	{
@@ -43,6 +45,7 @@ public class CharacterMove2 : MonoBehaviour {
 
 		rb2d = GetComponent<Rigidbody2D>();
 		energy2 = GameObject.Find ("Slider2").GetComponent<Slider> ();
+		anim = GetComponent<Animator> ();
 
 		player2Charge = 100;
 		energy2.value = 100;
@@ -73,6 +76,7 @@ public class CharacterMove2 : MonoBehaviour {
 		} else if (player2Selection == 5) {
 			jumpForce = 8000f;
 			phMt.friction = 1f;
+			phMt.bounciness = 0.6f;
 		} else {
 			phMt.friction = 0.1f;
 			phMt.bounciness = 0.6f;
@@ -99,10 +103,13 @@ public class CharacterMove2 : MonoBehaviour {
 			rb2d.AddForce(new Vector2(0f, jumpForce));
 			player2Charge = player2Charge - jumpCost;
 			energy2.value -= jumpCost;
+			anim.SetTrigger ("IsJumping");
+
 		} else if (Input.GetButtonDown("Jump2") && !grounded && doubleJump == true && player2Charge >= jumpCost && Pauser.pause == false){
 			if (!infinijump){
 				doubleJump = false;
 			}
+			anim.SetTrigger ("DoubleJump");
 			rb2d.AddForce(new Vector2(0f, jumpForce));
 			player2Charge = player2Charge -jumpCost;
 			energy2.value -= jumpCost;
@@ -111,7 +118,7 @@ public class CharacterMove2 : MonoBehaviour {
 		if (Input.GetButtonDown("Fire2") && player2Charge >= boostCost && Pauser.pause == false){
 			player2Charge = player2Charge - boostCost;
 			energy2.value -= boostCost;
-
+			anim.SetTrigger("Dash");
 
 			if (facingRight == true){
 				rb2d.AddForce(new Vector2(jumpForce * 1.5f, 0f));

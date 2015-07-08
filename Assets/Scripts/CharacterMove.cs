@@ -36,6 +36,10 @@ public class CharacterMove : MonoBehaviour {
 
 	public static bool dieded1;
 
+	private Animator anim;
+
+	public GameObject hitbox;
+
 	void Awake () 
 	{
 
@@ -45,6 +49,7 @@ public class CharacterMove : MonoBehaviour {
 
 		rb2d = GetComponent<Rigidbody2D> ();
 		energy1 = GameObject.Find ("Slider1").GetComponent<Slider> ();
+		anim = GetComponent<Animator> ();
 
 		player1Charge = 100f;
 		energy1.value = 100f;
@@ -75,6 +80,7 @@ public class CharacterMove : MonoBehaviour {
 		} else if (player1Selection == 5) {
 			jumpForce = 8000f;
 			phMt.friction = 1f;
+			phMt.bounciness = 0.6f;
 		} else {
 			phMt.friction = 0.1f;
 			phMt.bounciness = 0.6f;
@@ -102,11 +108,13 @@ public class CharacterMove : MonoBehaviour {
 			rb2d.AddForce(new Vector2(0f, jumpForce));
 			player1Charge = player1Charge - jumpCost;
 			energy1.value -= jumpCost;
+			anim.SetTrigger ("IsJumping");
 
 		} else if (Input.GetButtonDown("Jump") && !grounded && doubleJump == true && player1Charge >= jumpCost && Pauser.pause == false){
 			if (!infinijump){
 			doubleJump = false;
 			}
+			anim.SetTrigger ("DoubleJump");
 			rb2d.AddForce(new Vector2(0f, jumpForce));
 			player1Charge = player1Charge - jumpCost;
 			energy1.value -= jumpCost;
@@ -116,7 +124,8 @@ public class CharacterMove : MonoBehaviour {
 
 			player1Charge = player1Charge - boostCost;
 			energy1.value -= boostCost;
-
+			anim.SetTrigger("Dash");
+			Instantiate (hitbox, new Vector2 (transform.position.x + 0.5f, transform.position.y), Quaternion.identity);
 			if (facingRight == true){
 				rb2d.AddForce(new Vector2(jumpForce * 1.5f, 0f));
 				if (player1Selection == 6) {
