@@ -38,7 +38,9 @@ public class CharacterMove : MonoBehaviour {
 
 	private Animator anim;
 
-	public GameObject hitbox;
+	public bool pause;
+
+	//public GameObject hitbox;
 
 	void Awake () 
 	{
@@ -100,7 +102,15 @@ public class CharacterMove : MonoBehaviour {
 
 	void Update () 
 	{
-		
+
+		if (pause == true) {
+			anim.SetBool ("Block", true);
+			rb2d.isKinematic = true;
+		} else {
+			anim.SetBool ("Block", false);
+			rb2d.isKinematic = false;
+		}
+
 		if (Input.GetButtonDown("Jump") && grounded && player1Charge >= jumpCost && Pauser.pause == false)
 		{
 			grounded = false;
@@ -115,17 +125,19 @@ public class CharacterMove : MonoBehaviour {
 			doubleJump = false;
 			}
 			anim.SetTrigger ("DoubleJump");
-			rb2d.AddForce(new Vector2(0f, jumpForce));
+			rb2d.AddForce(new Vector2(0f, jumpForce / 2));
 			player1Charge = player1Charge - jumpCost;
 			energy1.value -= jumpCost;
 		}
 
 		if (Input.GetButtonDown("Fire1") && player1Charge >= boostCost && Pauser.pause == false){
 
+			rb2d.isKinematic = true;
+			rb2d.isKinematic = false;
 			player1Charge = player1Charge - boostCost;
 			energy1.value -= boostCost;
 			anim.SetTrigger("Dash");
-			Instantiate (hitbox, new Vector2 (transform.position.x + 0.5f, transform.position.y), Quaternion.identity);
+			//Instantiate (hitbox, new Vector2 (transform.position.x + 0.5f, transform.position.y), Quaternion.identity);
 			if (facingRight == true){
 				rb2d.AddForce(new Vector2(jumpForce * 1.5f, 0f));
 				if (player1Selection == 6) {
@@ -142,6 +154,10 @@ public class CharacterMove : MonoBehaviour {
 		if (player1Charge < 100) {
 			player1Charge = player1Charge + 0.25f;
 			energy1.value += 0.25f;
+		}
+
+		if (Input.GetButtonDown ("Block1")) {
+			StartCoroutine (WaitBool(1));
 		}
 
 	}
@@ -226,7 +242,12 @@ public class CharacterMove : MonoBehaviour {
 		Application.LoadLevel(2);
 	}
 
-
+	public IEnumerator WaitBool (int delay)
+	{
+		pause = true;
+		yield return new WaitForSeconds (delay);
+		pause = false;
+	}
 
 	
 	

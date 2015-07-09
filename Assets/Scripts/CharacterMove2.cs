@@ -110,7 +110,7 @@ public class CharacterMove2 : MonoBehaviour {
 				doubleJump = false;
 			}
 			anim.SetTrigger ("DoubleJump");
-			rb2d.AddForce(new Vector2(0f, jumpForce));
+			rb2d.AddForce(new Vector2(0f, jumpForce / 2));
 			player2Charge = player2Charge -jumpCost;
 			energy2.value -= jumpCost;
 		}
