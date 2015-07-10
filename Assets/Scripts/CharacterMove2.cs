@@ -166,6 +166,18 @@ public class CharacterMove2 : MonoBehaviour {
 	
 	void OnCollisionEnter2D (Collision2D col)
 	{
+		bool temp;
+		temp = CharacterMove.GetFacingRight ();
+
+		if (col.gameObject.tag == "Hitter") {
+			Debug.Log ("dfgdf");
+			if (temp == true){
+				rb2d.AddForce(new Vector2(0f, jumpForce * 5));
+			} else if (temp == false){
+				rb2d.AddForce(new Vector2(0f, -jumpForce * 5));
+			}
+		}
+
 		if(col.gameObject.tag == "Ground")
 		{
 			grounded = true;

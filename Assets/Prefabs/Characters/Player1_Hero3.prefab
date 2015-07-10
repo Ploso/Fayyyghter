@@ -13,7 +13,7 @@ GameObject:
   - 114: {fileID: 11469910}
   - 61: {fileID: 6169884}
   - 95: {fileID: 9569400}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player1_Hero3
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -30,9 +30,9 @@ GameObject:
   - 4: {fileID: 493744}
   - 61: {fileID: 6125520}
   - 212: {fileID: 21260106}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GameObject
-  m_TagString: Untagged
+  m_TagString: Hitter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -45,7 +45,7 @@ Transform:
   m_GameObject: {fileID: 114312}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -5, y: -1, z: 0}
-  m_LocalScale: {x: -.5, y: .5, z: 1}
+  m_LocalScale: {x: .5, y: .5, z: 1}
   m_Children:
   - {fileID: 493744}
   m_Father: {fileID: 0}
@@ -131,7 +131,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3dcbd7e8c21c3d418f0ece0c9dd3496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  facingRight: 1
   jump: 0
   moveForce: 350
   maxSpeed: 6

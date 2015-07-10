@@ -8,6 +8,7 @@ TagManager:
   - Killer
   - Bouncer
   - Player2
+  - Hitter
   layers:
   - Default
   - TransparentFX
@@ -18,8 +19,8 @@ TagManager:
   - 
   - 
   - Ground
-  - 
-  - 
+  - Player1
+  - Player2
   - 
   - 
   - 

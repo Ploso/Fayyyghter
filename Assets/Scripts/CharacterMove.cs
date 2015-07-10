@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class CharacterMove : MonoBehaviour {
 	
-	[HideInInspector] public bool facingRight;
+	[HideInInspector] public static bool facingRight;
 	[HideInInspector] public bool jump = false;
 	public float moveForce = 365f;
 	public float maxSpeed = 5f;
@@ -139,12 +139,12 @@ public class CharacterMove : MonoBehaviour {
 			anim.SetTrigger("Dash");
 			//Instantiate (hitbox, new Vector2 (transform.position.x + 0.5f, transform.position.y), Quaternion.identity);
 			if (facingRight == true){
-				rb2d.AddForce(new Vector2(jumpForce * 1.5f, 0f));
+				//rb2d.AddForce(new Vector2(jumpForce * 1.5f, 0f));
 				if (player1Selection == 6) {
 					Instantiate (floorProp, new Vector2 (transform.position.x - 1, transform.position.y), Quaternion.identity);
 				}
 			} else {
-				rb2d.AddForce(new Vector2(-jumpForce * 1.5f, 0f));
+				//rb2d.AddForce(new Vector2(-jumpForce * 1.5f, 0f));
 				if (player1Selection == 6) {
 					Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y), Quaternion.identity);
 				}
@@ -249,6 +249,9 @@ public class CharacterMove : MonoBehaviour {
 		pause = false;
 	}
 
-	
+	public static bool GetFacingRight ()
+	{
+		return facingRight;
+	}
 	
 }
