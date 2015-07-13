@@ -6,8 +6,8 @@ public class CharacterMove : MonoBehaviour {
 	
 	[HideInInspector] public static bool facingRight;
 	[HideInInspector] public bool jump = false;
-	public float moveForce = 365f;
-	public float maxSpeed = 5f;
+	public float movex;
+	public float maxSpeed;
 	public float jumpForce;
 	public static float player1Charge;
 	public int player1Selection;
@@ -40,14 +40,16 @@ public class CharacterMove : MonoBehaviour {
 
 	public bool pause;
 
-	//public GameObject hitbox;
-
 	void Awake () 
 	{
+		if (facingRight == true) {
+			Flip();
+		}
+
+		movex = 0f;
 
 		dieded1 = false;
 
-		Flip ();
 
 		rb2d = GetComponent<Rigidbody2D> ();
 		energy1 = GameObject.Find ("Slider1").GetComponent<Slider> ();
@@ -79,6 +81,7 @@ public class CharacterMove : MonoBehaviour {
 			jumpForce = 8000f;
 			rb2d.gravityScale = 1.5f;
 			phMt.friction = 0.01f;
+			maxSpeed = 80000f;
 		} else if (player1Selection == 5) {
 			jumpForce = 8000f;
 			phMt.friction = 1f;
@@ -87,6 +90,7 @@ public class CharacterMove : MonoBehaviour {
 			phMt.friction = 0.1f;
 			phMt.bounciness = 0.6f;
 			jumpForce = 6000f;
+			maxSpeed = 50000f;
 		}
 
 		if (player1Selection == 4) {
@@ -132,19 +136,14 @@ public class CharacterMove : MonoBehaviour {
 
 		if (Input.GetButtonDown("Fire1") && player1Charge >= boostCost && Pauser.pause == false){
 
-			rb2d.isKinematic = true;
-			rb2d.isKinematic = false;
 			player1Charge = player1Charge - boostCost;
 			energy1.value -= boostCost;
 			anim.SetTrigger("Dash");
-			//Instantiate (hitbox, new Vector2 (transform.position.x + 0.5f, transform.position.y), Quaternion.identity);
 			if (facingRight == true){
-				//rb2d.AddForce(new Vector2(jumpForce * 1.5f, 0f));
 				if (player1Selection == 6) {
 					Instantiate (floorProp, new Vector2 (transform.position.x - 1, transform.position.y), Quaternion.identity);
 				}
 			} else {
-				//rb2d.AddForce(new Vector2(-jumpForce * 1.5f, 0f));
 				if (player1Selection == 6) {
 					Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y), Quaternion.identity);
 				}
@@ -164,13 +163,14 @@ public class CharacterMove : MonoBehaviour {
 	
 	void FixedUpdate()
 	{
-		float h = Input.GetAxis("Horizontal");
+		movex = Input.GetAxis("Horizontal");
 		
-		if (h > 0 && !facingRight) 
+		if (movex > 0 && !facingRight) 
 			Flip ();
-		else if (h < 0 && facingRight)
+		else if (movex < 0 && facingRight)
 			Flip ();
 
+		rb2d.AddForce (Vector2.right * movex * maxSpeed); 
 	}
 	
 	
@@ -184,6 +184,17 @@ public class CharacterMove : MonoBehaviour {
 
 	void OnCollisionEnter2D (Collision2D col)
 	{
+		bool temp;
+		temp = CharacterMove2.GetFacingRight ();
+
+		if (col.gameObject.tag == "Hitter2") {
+			if (temp == true){
+				rb2d.AddForce(new Vector2(jumpForce * 5, 0f));
+			} else if (temp == false){
+				rb2d.AddForce(new Vector2(-jumpForce * 5, 0f));
+			}
+		}
+
 		if(col.gameObject.tag == "Ground")
 		{
 			grounded = true;

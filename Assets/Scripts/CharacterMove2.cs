@@ -4,10 +4,10 @@ using UnityEngine.UI;
 
 public class CharacterMove2 : MonoBehaviour {
 	
-	[HideInInspector] public bool facingRight = false;
+	[HideInInspector] public static bool facingRight = false;
 	[HideInInspector] public bool jump = false;
-	public float moveForce = 365f;
-	public float maxSpeed = 5f;
+	public float movex;
+	public float maxSpeed;
 	public float jumpForce;
 	public static float player2Charge;
 	public int player2Selection;
@@ -38,10 +38,14 @@ public class CharacterMove2 : MonoBehaviour {
 	public static bool dieded2;
 
 	private Animator anim;
-	
+
+	public bool pause;
+
 	void Awake () 
 	{
 		dieded2 = false;
+
+		facingRight = true;
 
 		rb2d = GetComponent<Rigidbody2D>();
 		energy2 = GameObject.Find ("Slider2").GetComponent<Slider> ();
@@ -81,6 +85,7 @@ public class CharacterMove2 : MonoBehaviour {
 			phMt.friction = 0.1f;
 			phMt.bounciness = 0.6f;
 			jumpForce = 6000f;
+			maxSpeed = 50000f;
 		}
 
 		if (player2Selection == 4) {
@@ -140,18 +145,22 @@ public class CharacterMove2 : MonoBehaviour {
 			energy2.value += 0.25f;
 		}
 
+		if (Input.GetButtonDown ("Block1")) {
+			StartCoroutine (WaitBool(1));
+		}
+
 	}
 	
 	void FixedUpdate()
 	{
-		float h = Input.GetAxis("Horizontal2");
+		movex = Input.GetAxis("Horizontal2");
 		
-		if (h > 0 && !facingRight)
+		if (movex > 0 && !facingRight) 
 			Flip ();
-		else if (h < 0 && facingRight)
+		else if (movex < 0 && facingRight)
 			Flip ();
-
-
+		
+		rb2d.AddForce (Vector2.right * movex * maxSpeed); 
 		
 	}
 	
@@ -169,12 +178,11 @@ public class CharacterMove2 : MonoBehaviour {
 		bool temp;
 		temp = CharacterMove.GetFacingRight ();
 
-		if (col.gameObject.tag == "Hitter") {
-			Debug.Log ("dfgdf");
+		if (col.gameObject.tag == "Hitter1") {
 			if (temp == true){
-				rb2d.AddForce(new Vector2(0f, jumpForce * 5));
+				rb2d.AddForce(new Vector2(jumpForce * 5, 0f));
 			} else if (temp == false){
-				rb2d.AddForce(new Vector2(0f, -jumpForce * 5));
+				rb2d.AddForce(new Vector2(-jumpForce * 5, 0f));
 			}
 		}
 
@@ -237,7 +245,17 @@ public class CharacterMove2 : MonoBehaviour {
 	{
 		Application.LoadLevel(2);
 	}
-	
 
+	public IEnumerator WaitBool (int delay)
+	{
+		pause = true;
+		yield return new WaitForSeconds (delay);
+		pause = false;
+	}
+	
+	public static bool GetFacingRight ()
+	{
+		return facingRight;
+	}
 	
 }
