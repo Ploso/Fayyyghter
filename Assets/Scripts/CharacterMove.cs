@@ -245,6 +245,8 @@ public class CharacterMove : MonoBehaviour {
 
 	void EndRound()
 	{
+		facingRight = false;
+		Destroy (gameObject);
 		Application.LoadLevel(1);
 	}
 	

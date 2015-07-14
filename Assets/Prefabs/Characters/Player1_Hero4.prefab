@@ -88,9 +88,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3dcbd7e8c21c3d418f0ece0c9dd3496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  facingRight: 1
   jump: 0
-  moveForce: 350
+  movex: 0
   maxSpeed: 6
   jumpForce: 6000
   player1Selection: 0
@@ -129,7 +128,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 5318a9e56221cc84b908d9283b10df8e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2bcf9b6a77b248b4cacf01c2c8d02719, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:

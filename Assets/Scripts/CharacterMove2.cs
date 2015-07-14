@@ -126,13 +126,11 @@ public class CharacterMove2 : MonoBehaviour {
 			anim.SetTrigger("Dash");
 
 			if (facingRight == true){
-				rb2d.AddForce(new Vector2(jumpForce * 1.5f, 0f));
 				if (player2Selection == 6) {
 					Instantiate (floorProp, new Vector2 (transform.position.x - 1, transform.position.y), Quaternion.identity);
 				}
 
 			} else {
-				rb2d.AddForce(new Vector2(-jumpForce * 1.5f, 0f));
 				if (player2Selection == 6) {
 					Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y), Quaternion.identity);
 				}
@@ -238,6 +236,7 @@ public class CharacterMove2 : MonoBehaviour {
 
 	void EndRound()
 	{
+		Destroy (gameObject);
 		Application.LoadLevel(1);
 	}
 
