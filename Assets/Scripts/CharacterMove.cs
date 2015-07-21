@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class CharacterMove : MonoBehaviour {
 	
-	[HideInInspector] public static bool facingRight;
+	public static bool facingRight;
 	[HideInInspector] public bool jump = false;
 	public float movex;
 	public float maxSpeed;
@@ -40,8 +40,14 @@ public class CharacterMove : MonoBehaviour {
 
 	public bool pause;
 
+	public bool ultraPause;
+
 	void Awake () 
 	{
+		ultraPause = true;
+
+		StartCoroutine (Buffer ());
+
 		if (facingRight == true) {
 			Flip();
 		}
@@ -49,7 +55,6 @@ public class CharacterMove : MonoBehaviour {
 		movex = 0f;
 
 		dieded1 = false;
-
 
 		rb2d = GetComponent<Rigidbody2D> ();
 		energy1 = GameObject.Find ("Slider1").GetComponent<Slider> ();
@@ -77,9 +82,9 @@ public class CharacterMove : MonoBehaviour {
 
 		if (player1Selection == 3) {
 			rb2d.mass = 40;
-			phMt.bounciness = 0.95f;
+			phMt.bounciness = 0.80f;
 			jumpForce = 8000f;
-			rb2d.gravityScale = 1.5f;
+			rb2d.gravityScale = 1.0f;
 			phMt.friction = 0.01f;
 			maxSpeed = 80000f;
 		} else if (player1Selection == 5) {
@@ -100,9 +105,12 @@ public class CharacterMove : MonoBehaviour {
 			shield = false;
 		}
 
-		
+		ultraPause = false;
 	}
-	
+
+
+//------------------------------------------------------------------------------------
+
 
 	void Update () 
 	{
@@ -160,26 +168,39 @@ public class CharacterMove : MonoBehaviour {
 		}
 
 	}
-	
+
+
+//------------------------------------------------------------------------------
+
+
 	void FixedUpdate()
 	{
-		movex = Input.GetAxis("Horizontal");
-		
-		if (movex > 0 && !facingRight) 
-			Flip ();
-		else if (movex < 0 && facingRight)
-			Flip ();
+		if (ultraPause == false) {
+			movex = Input.GetAxis ("Horizontal");
+		}
+
+		if (ultraPause == false) {
+			if (movex > 0 && !facingRight) 
+				Flip ();
+			else if (movex < 0 && facingRight)
+				Flip ();
+		}
 
 		rb2d.AddForce (Vector2.right * movex * maxSpeed); 
 	}
-	
-	
+
+
+//-------------------------------------------------------------------------------	
+
+
 	void Flip()
 	{
-		facingRight = !facingRight;
-		Vector3 theScale = transform.localScale;
-		theScale.x *= -1;
-		transform.localScale = theScale;
+		if (ultraPause == false) {
+			facingRight = !facingRight;
+			Vector3 theScale = transform.localScale;
+			theScale.x *= -1;
+			transform.localScale = theScale;
+		}
 	}
 
 	void OnCollisionEnter2D (Collision2D col)
@@ -189,9 +210,9 @@ public class CharacterMove : MonoBehaviour {
 
 		if (col.gameObject.tag == "Hitter2") {
 			if (temp == true){
-				rb2d.AddForce(new Vector2(jumpForce * 5, 0f));
+				rb2d.AddForce(new Vector2(10000, 0f));
 			} else if (temp == false){
-				rb2d.AddForce(new Vector2(-jumpForce * 5, 0f));
+				rb2d.AddForce(new Vector2(-10000 * 5, 0f));
 			}
 		}
 
@@ -246,13 +267,16 @@ public class CharacterMove : MonoBehaviour {
 	void EndRound()
 	{
 		facingRight = false;
+		ultraPause = true;
 		Destroy (gameObject);
 		Application.LoadLevel(1);
 	}
 	
 	void EndGame()
 	{
+		ultraPause = true;
 		Application.LoadLevel(2);
+		Destroy (gameObject);
 	}
 
 	public IEnumerator WaitBool (int delay)
@@ -265,6 +289,11 @@ public class CharacterMove : MonoBehaviour {
 	public static bool GetFacingRight ()
 	{
 		return facingRight;
+	}
+
+	public IEnumerator Buffer()
+	{
+		yield return new WaitForSeconds (0.01f);
 	}
 	
 }

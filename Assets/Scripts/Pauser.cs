@@ -10,6 +10,7 @@ public class Pauser : MonoBehaviour {
 	public GameObject go;
 
 	void Start () {
+		StartCoroutine (Buffer ());
 		Instantiate (ready, transform.position, Quaternion.identity);
 		Time.timeScale = 0;
 		count = 0;
@@ -31,5 +32,10 @@ public class Pauser : MonoBehaviour {
 		Time.timeScale = 1;
 		pause = false;
 		Destroy (gameObject);
+	}
+
+	public IEnumerator Buffer()
+	{
+		yield return new WaitForSeconds (0.01f);
 	}
 }

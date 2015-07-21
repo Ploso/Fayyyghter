@@ -12,7 +12,8 @@ public class Spawner : MonoBehaviour {
 	void Start () {
 		player1HeroSelect = SelectionScrip.GetPl1Selection ();
 
-		Instantiate (player1Hero [player1HeroSelect], transform.position, Quaternion.identity);
+		Invoke ("Spawn1", 1);
+
 	}
 	
 
@@ -28,5 +29,10 @@ public class Spawner : MonoBehaviour {
 	public static void SetWin1(int tempWin)
 	{
 		win1 = tempWin;
+	}
+
+	public void Spawn1 ()
+	{
+		Instantiate (player1Hero [player1HeroSelect], transform.position, transform.rotation);
 	}
 }

@@ -1,5 +1,23 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &156448
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 461862}
+  - 61: {fileID: 6123474}
+  - 114: {fileID: 11417486}
+  - 50: {fileID: 5075964}
+  m_Layer: 11
+  m_Name: HitCollider2
+  m_TagString: Hitter2
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &172100
 GameObject:
   m_ObjectHideFlags: 0
@@ -29,8 +47,21 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -7.57000017, y: -2.72000003, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 461862}
   m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!4 &461862
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 156448}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 454814}
   m_RootOrder: 0
 --- !u!50 &5054326
 Rigidbody2D:
@@ -47,6 +78,34 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
+--- !u!50 &5075964
+Rigidbody2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 156448}
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: .0500000007
+  m_GravityScale: 0
+  m_FixedAngle: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+--- !u!61 &6123474
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 156448}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Size: {x: .270000011, y: .270000011}
 --- !u!61 &6162082
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -77,6 +136,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11417486
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 156448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db7c190fb771a3b4ca3bea1805468c39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11446046
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -88,9 +158,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8f9fb57c9fe7f84b9810f99bd0ab941, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  facingRight: 1
   jump: 0
-  moveForce: 350
+  movex: 0
   maxSpeed: 6
   jumpForce: 6000
   player2Selection: 0
@@ -104,6 +173,8 @@ MonoBehaviour:
   floorProp: {fileID: 107954, guid: 1b2d9ec8d924f404da744730f7eadcf6, type: 2}
   pum: {fileID: 151418, guid: cf91f8e0e08d52243a2381e4a2ac2e8c, type: 2}
   pum2: {fileID: 104486, guid: e34e3ec5df234a141a33e808f03243dd, type: 2}
+  pause: 0
+  ultraPause: 0
 --- !u!212 &21285940
 SpriteRenderer:
   m_ObjectHideFlags: 1
