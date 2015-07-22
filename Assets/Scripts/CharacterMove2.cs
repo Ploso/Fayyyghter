@@ -43,11 +43,15 @@ public class CharacterMove2 : MonoBehaviour {
 
 	public bool ultraPause;
 
+	public bool isHitting;
+
 //---------------------------------------------------------------------------
 
 	void Awake () 
 	{
 		ultraPause = true;
+
+		isHitting = false;
 
 		facingRight = true;
 
@@ -143,7 +147,7 @@ public class CharacterMove2 : MonoBehaviour {
 			player2Charge = player2Charge - boostCost;
 			energy2.value -= boostCost;
 			anim.SetTrigger("Dash");
-
+			//StartCoroutine (HitPause());
 			if (facingRight == true){
 				if (player2Selection == 6) {
 					Instantiate (floorProp, new Vector2 (transform.position.x - 1, transform.position.y), Quaternion.identity);
@@ -185,6 +189,14 @@ public class CharacterMove2 : MonoBehaviour {
 		}
 		
 		rb2d.AddForce (Vector2.right * movex * maxSpeed); 
+
+		if (isHitting == false) {
+			if (Input.GetAxis ("Horizontal2") != 0 && anim.GetBool ("Block") == false) {
+				anim.SetBool ("Walking", true);
+			} else {
+				anim.SetBool ("Walking", false);
+			}
+		}
 
 	}
 
@@ -295,5 +307,11 @@ public class CharacterMove2 : MonoBehaviour {
 	{
 		yield return new WaitForSeconds (0.01f);
 	}
-	
+
+	public IEnumerator HitPause ()
+	{
+		isHitting = true;
+		yield return new WaitForSeconds (0.5f);
+		isHitting = false;
+	}
 }

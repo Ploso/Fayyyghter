@@ -42,9 +42,13 @@ public class CharacterMove : MonoBehaviour {
 
 	public bool ultraPause;
 
+	public bool isHitting;
+
 	void Awake () 
 	{
 		ultraPause = true;
+
+		isHitting = false;
 
 		StartCoroutine (Buffer ());
 
@@ -116,6 +120,7 @@ public class CharacterMove : MonoBehaviour {
 	void Update () 
 	{
 
+
 		if (pause == true) {
 			anim.SetBool ("Block", true);
 			rb2d.isKinematic = true;
@@ -148,6 +153,7 @@ public class CharacterMove : MonoBehaviour {
 			player1Charge = player1Charge - boostCost;
 			energy1.value -= boostCost;
 			anim.SetTrigger("Dash");
+			//StartCoroutine (HitPause());
 			if (facingRight == true){
 				if (player1Selection == 6) {
 					Instantiate (floorProp, new Vector2 (transform.position.x - 1, transform.position.y), Quaternion.identity);
@@ -185,6 +191,14 @@ public class CharacterMove : MonoBehaviour {
 				Flip ();
 			else if (movex < 0 && facingRight)
 				Flip ();
+		}
+
+		if (isHitting == false) {
+			if (Input.GetAxis ("Horizontal") != 0 && anim.GetBool ("Block") == false) {
+				anim.SetBool ("Walking", true);
+			} else {
+				anim.SetBool ("Walking", false);
+			}
 		}
 
 		rb2d.AddForce (Vector2.right * movex * maxSpeed); 
@@ -295,6 +309,13 @@ public class CharacterMove : MonoBehaviour {
 	public IEnumerator Buffer()
 	{
 		yield return new WaitForSeconds (0.01f);
+	}
+
+	public IEnumerator HitPause ()
+	{
+		isHitting = true;
+		yield return new WaitForSeconds (0.5f);
+		isHitting = false;
 	}
 	
 }
