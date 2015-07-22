@@ -91,6 +91,7 @@ public class CharacterMove : MonoBehaviour {
 			jumpForce = 8000f;
 			phMt.friction = 1f;
 			phMt.bounciness = 0.6f;
+			maxSpeed = 50000f;
 		} else {
 			phMt.friction = 0.1f;
 			phMt.bounciness = 0.6f;

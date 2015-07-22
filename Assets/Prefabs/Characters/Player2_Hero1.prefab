@@ -11,7 +11,7 @@ GameObject:
   - 61: {fileID: 6123474}
   - 114: {fileID: 11417486}
   - 50: {fileID: 5075964}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: HitCollider2
   m_TagString: Hitter2
   m_Icon: {fileID: 0}
