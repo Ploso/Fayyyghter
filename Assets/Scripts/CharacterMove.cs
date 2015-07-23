@@ -24,6 +24,7 @@ public class CharacterMove : MonoBehaviour {
 
 	public float jumpCost;
 	public float boostCost;
+	public float blockCost;
 
 	public PhysicsMaterial2D phMt;
 
@@ -44,17 +45,27 @@ public class CharacterMove : MonoBehaviour {
 
 	public bool isHitting;
 
+	public static int hitforce1;
+	private int hitforce2;
+
+//-----------------------------------------------------------------------
+
 	void Awake () 
 	{
 		ultraPause = true;
+
+		movex = 0;
 
 		isHitting = false;
 
 		StartCoroutine (Buffer ());
 
-		if (facingRight == true) {
-			Flip();
+		facingRight = false;
+		Vector3 theScale = transform.localScale;
+		if ( theScale.x > 0){
+			theScale.x *= -1;
 		}
+		transform.localScale = theScale;
 
 		movex = 0f;
 
@@ -73,9 +84,11 @@ public class CharacterMove : MonoBehaviour {
 			infinijump = true;
 		}
 
-		if (player1Selection == 2){
+		if (player1Selection == 2) {
 			boostCost = 15f;
-		} else{
+		} else if (player1Selection == 6) {
+			boostCost = 50f;
+		} else {
 			boostCost = 20f;
 		} 
 		if (player1Selection == 1){
@@ -85,7 +98,7 @@ public class CharacterMove : MonoBehaviour {
 		} 
 
 		if (player1Selection == 3) {
-			rb2d.mass = 40;
+			rb2d.mass = 35;
 			phMt.bounciness = 0.80f;
 			jumpForce = 8000f;
 			rb2d.gravityScale = 1.0f;
@@ -96,6 +109,12 @@ public class CharacterMove : MonoBehaviour {
 			phMt.friction = 1f;
 			phMt.bounciness = 0.6f;
 			maxSpeed = 50000f;
+		} else if (player1Selection == 6) {
+			rb2d.mass = 5;
+			jumpForce = 2000f;
+			phMt.friction = 0.1f;
+			phMt.bounciness = 0.3f;
+			maxSpeed = 10000f;
 		} else {
 			phMt.friction = 0.1f;
 			phMt.bounciness = 0.6f;
@@ -109,6 +128,20 @@ public class CharacterMove : MonoBehaviour {
 		} else {
 			shield = false;
 		}
+
+		if (player1Selection == 1) {
+			hitforce1 = 20000;
+		} else if (player1Selection == 2) {
+			hitforce1 = 8000;
+		} else if (player1Selection == 3) {
+			hitforce1 = 15000;
+		} else if (player1Selection == 5) {
+			hitforce1 = 30000;
+		} else {
+			hitforce1 = 10000;
+		}
+
+		blockCost = 50f;
 
 		ultraPause = false;
 	}
@@ -156,11 +189,20 @@ public class CharacterMove : MonoBehaviour {
 			//StartCoroutine (HitPause());
 			if (facingRight == true){
 				if (player1Selection == 6) {
-					Instantiate (floorProp, new Vector2 (transform.position.x - 1, transform.position.y), Quaternion.identity);
+					Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y), Quaternion.identity);
 				}
 			} else {
 				if (player1Selection == 6) {
-					Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y), Quaternion.identity);
+					Instantiate (floorProp, new Vector2 (transform.position.x - 1, transform.position.y), Quaternion.identity);
+				}
+			}
+			if (facingRight == true){
+				if (player1Selection == 2) {
+					rb2d.AddForce(new Vector2(jumpForce * 2, 0f));
+				}
+			} else {
+				if (player1Selection == 2) {
+					rb2d.AddForce(new Vector2(-jumpForce * 2, 0f));
 				}
 			}
 		}
@@ -170,7 +212,9 @@ public class CharacterMove : MonoBehaviour {
 			energy1.value += 0.25f;
 		}
 
-		if (Input.GetButtonDown ("Block1")) {
+		if (Input.GetButtonDown ("Block1") && player1Charge >= blockCost && Pauser.pause == false) {
+			player1Charge = player1Charge - blockCost;
+			energy1.value -= blockCost;
 			StartCoroutine (WaitBool(1));
 		}
 
@@ -221,13 +265,14 @@ public class CharacterMove : MonoBehaviour {
 	void OnCollisionEnter2D (Collision2D col)
 	{
 		bool temp;
+		hitforce2 = CharacterMove2.GetHit2 ();
 		temp = CharacterMove2.GetFacingRight ();
 
 		if (col.gameObject.tag == "Hitter2") {
 			if (temp == true){
-				rb2d.AddForce(new Vector2(10000, 0f));
+				rb2d.AddForce(new Vector2(hitforce2, 0f));
 			} else if (temp == false){
-				rb2d.AddForce(new Vector2(-10000 * 5, 0f));
+				rb2d.AddForce(new Vector2(-hitforce2, 0f));
 			}
 		}
 
@@ -235,15 +280,6 @@ public class CharacterMove : MonoBehaviour {
 		{
 			grounded = true;
 			doubleJump = false;
-		}
-
-		if(col.gameObject.tag == "Player2")
-		{
-			if (facingRight == true){
-				Instantiate (pum, new Vector2(transform.position.x + 0.5f, transform.position.y), Quaternion.identity);
-			} else {
-				Instantiate (pum, new Vector2(transform.position.x - 0.5f, transform.position.y), Quaternion.identity);
-			}
 		}
 
 		if(col.gameObject.tag == "Killer")
@@ -268,6 +304,14 @@ public class CharacterMove : MonoBehaviour {
 					dieded1 = true;
 					win2temp++;
 					Spawner2.SetWin2(win2temp);
+					if (player1Selection == 6){
+						Instantiate (floorProp, transform.position, Quaternion.identity);
+						Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y), Quaternion.identity);
+						Instantiate (floorProp, new Vector2 (transform.position.x - 1, transform.position.y), Quaternion.identity);
+						Instantiate (floorProp, new Vector2 (transform.position.x, transform.position.y + 1), Quaternion.identity);
+						Instantiate (floorProp, new Vector2 (transform.position.x, transform.position.y - 1), Quaternion.identity);
+						Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y - 1), Quaternion.identity);
+					}
 					transform.position = new Vector2 (100, 100);
 					Invoke ("EndRound", 1f);
 				} else {
@@ -317,5 +361,11 @@ public class CharacterMove : MonoBehaviour {
 		yield return new WaitForSeconds (0.5f);
 		isHitting = false;
 	}
-	
+
+	public static int GetHit1()
+	{
+		return hitforce1;
+	}
+
+
 }

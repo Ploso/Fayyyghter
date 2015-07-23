@@ -13,7 +13,7 @@ GameObject:
   - 114: {fileID: 11496048}
   - 95: {fileID: 9520984}
   - 61: {fileID: 6185326}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player1_Hero1
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -118,7 +118,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: .270000011, y: .270000011}
+  m_Size: {x: .5, y: .5}
 --- !u!95 &9520984
 Animator:
   serializedVersion: 3
@@ -147,6 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db7c190fb771a3b4ca3bea1805468c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pum: {fileID: 151418, guid: cf91f8e0e08d52243a2381e4a2ac2e8c, type: 2}
 --- !u!114 &11496048
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -167,6 +168,7 @@ MonoBehaviour:
   groundCheck: {fileID: 439624}
   jumpCost: 0
   boostCost: 0
+  blockCost: 0
   phMt: {fileID: 6200000, guid: 329d7ad1542885b4f9c9c96f2516b5dc, type: 2}
   shield: 0
   shieldIcon: {fileID: 100574, guid: cf18b2ed1cd20d243b76aa7d7e41e92d, type: 2}
@@ -175,6 +177,7 @@ MonoBehaviour:
   pum2: {fileID: 104486, guid: e34e3ec5df234a141a33e808f03243dd, type: 2}
   pause: 0
   ultraPause: 0
+  isHitting: 0
 --- !u!212 &21256056
 SpriteRenderer:
   m_ObjectHideFlags: 1

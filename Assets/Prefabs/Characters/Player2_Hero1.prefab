@@ -31,7 +31,7 @@ GameObject:
   - 114: {fileID: 11446046}
   - 95: {fileID: 9568074}
   - 61: {fileID: 6162082}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player2_Hero1
   m_TagString: Player2
   m_Icon: {fileID: 0}
@@ -99,13 +99,13 @@ BoxCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 156448}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: .270000011, y: .270000011}
+  m_Size: {x: .5, y: .5}
 --- !u!61 &6162082
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -116,7 +116,7 @@ BoxCollider2D:
   m_Material: {fileID: 6200000, guid: ed6f6a2c12f30a24ea6c916909a26d54, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_Offset: {x: -.0526729822, y: 0}
+  m_Offset: {x: -.300000012, y: 0}
   serializedVersion: 2
   m_Size: {x: .577693105, y: 2.3141923}
 --- !u!95 &9568074
@@ -147,6 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db7c190fb771a3b4ca3bea1805468c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pum: {fileID: 151418, guid: cf91f8e0e08d52243a2381e4a2ac2e8c, type: 2}
 --- !u!114 &11446046
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -167,6 +168,7 @@ MonoBehaviour:
   groundCheck: {fileID: 454814}
   jumpCost: 0
   boostCost: 0
+  blockCost: 0
   phMt: {fileID: 6200000, guid: ed6f6a2c12f30a24ea6c916909a26d54, type: 2}
   shield: 0
   shieldIcon: {fileID: 100574, guid: cf18b2ed1cd20d243b76aa7d7e41e92d, type: 2}
@@ -175,6 +177,7 @@ MonoBehaviour:
   pum2: {fileID: 104486, guid: e34e3ec5df234a141a33e808f03243dd, type: 2}
   pause: 0
   ultraPause: 0
+  isHitting: 0
 --- !u!212 &21285940
 SpriteRenderer:
   m_ObjectHideFlags: 1

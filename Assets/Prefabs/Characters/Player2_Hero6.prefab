@@ -13,7 +13,7 @@ GameObject:
   - 114: {fileID: 11441272}
   - 58: {fileID: 5874958}
   - 95: {fileID: 9528494}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player2_Hero6
   m_TagString: Player2
   m_Icon: {fileID: 0}
@@ -88,9 +88,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8f9fb57c9fe7f84b9810f99bd0ab941, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  facingRight: 1
   jump: 0
-  moveForce: 350
+  movex: 0
   maxSpeed: 6
   jumpForce: 6000
   player2Selection: 0
@@ -98,12 +97,16 @@ MonoBehaviour:
   groundCheck: {fileID: 494916}
   jumpCost: 0
   boostCost: 0
+  blockCost: 0
   phMt: {fileID: 6200000, guid: ed6f6a2c12f30a24ea6c916909a26d54, type: 2}
   shield: 0
   shieldIcon: {fileID: 100574, guid: cf18b2ed1cd20d243b76aa7d7e41e92d, type: 2}
   floorProp: {fileID: 107954, guid: 1b2d9ec8d924f404da744730f7eadcf6, type: 2}
   pum: {fileID: 151418, guid: cf91f8e0e08d52243a2381e4a2ac2e8c, type: 2}
   pum2: {fileID: 104486, guid: e34e3ec5df234a141a33e808f03243dd, type: 2}
+  pause: 0
+  ultraPause: 0
+  isHitting: 0
 --- !u!212 &21261474
 SpriteRenderer:
   m_ObjectHideFlags: 1

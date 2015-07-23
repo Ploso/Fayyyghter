@@ -3,10 +3,10 @@ using System.Collections;
 
 public class Hitboxes : MonoBehaviour {
 		
-	public static BoxCollider2D hitbox;
+	public GameObject pum;
 
 	void Start () {
-		hitbox = gameObject.GetComponent<BoxCollider2D> ();
+
 	}
 	
 
@@ -14,12 +14,8 @@ public class Hitboxes : MonoBehaviour {
 	
 	}
 
-	public static void SwitchCollider ()
+	void OnCollisionEnter2D (Collision2D col)
 	{
-		if (hitbox.enabled == false) {
-			hitbox.enabled = true;
-		} else {
-			hitbox.enabled = false;
-		}
+		Instantiate (pum, transform.position, Quaternion.identity);
 	}
 }
