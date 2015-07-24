@@ -61,11 +61,17 @@ public class CharacterMove : MonoBehaviour {
 		StartCoroutine (Buffer ());
 
 		facingRight = false;
+/**
 		Vector3 theScale = transform.localScale;
-		if ( theScale.x > 0){
+		if (player1Selection == 3) {
 			theScale.x *= -1;
+		} else {
+			if (theScale.x > 0) {
+				theScale.x *= -1;
+			}
 		}
 		transform.localScale = theScale;
+**/
 
 		movex = 0f;
 
@@ -104,6 +110,12 @@ public class CharacterMove : MonoBehaviour {
 			rb2d.gravityScale = 1.0f;
 			phMt.friction = 0.01f;
 			maxSpeed = 80000f;
+		} else if (player1Selection == 4) {
+			rb2d.gravityScale = 0.3f;
+			phMt.friction = 0.1f;
+			phMt.bounciness = 0.6f;
+			jumpForce = 4000f;
+			maxSpeed = 50000f;
 		} else if (player1Selection == 5) {
 			jumpForce = 8000f;
 			phMt.friction = 1f;
@@ -162,7 +174,7 @@ public class CharacterMove : MonoBehaviour {
 			rb2d.isKinematic = false;
 		}
 
-		if (Input.GetButtonDown("Jump") && grounded && player1Charge >= jumpCost && Pauser.pause == false)
+		if (Input.GetButtonDown("Jump") && grounded && player1Charge >= jumpCost && Pauser.pause == false && pause == false)
 		{
 			grounded = false;
 			doubleJump = true;
@@ -171,7 +183,7 @@ public class CharacterMove : MonoBehaviour {
 			energy1.value -= jumpCost;
 			anim.SetTrigger ("IsJumping");
 
-		} else if (Input.GetButtonDown("Jump") && !grounded && doubleJump == true && player1Charge >= jumpCost && Pauser.pause == false){
+		} else if (Input.GetButtonDown("Jump") && !grounded && doubleJump == true && player1Charge >= jumpCost && Pauser.pause == false && pause == false){
 			if (!infinijump){
 			doubleJump = false;
 			}
@@ -181,7 +193,7 @@ public class CharacterMove : MonoBehaviour {
 			energy1.value -= jumpCost;
 		}
 
-		if (Input.GetButtonDown("Fire1") && player1Charge >= boostCost && Pauser.pause == false){
+		if (Input.GetButtonDown("Fire1") && player1Charge >= boostCost && Pauser.pause == false && pause == false){
 
 			player1Charge = player1Charge - boostCost;
 			energy1.value -= boostCost;
@@ -226,7 +238,7 @@ public class CharacterMove : MonoBehaviour {
 
 	void FixedUpdate()
 	{
-		if (ultraPause == false) {
+		if (ultraPause == false && pause == false) {
 			movex = Input.GetAxis ("Horizontal");
 		}
 
@@ -297,6 +309,14 @@ public class CharacterMove : MonoBehaviour {
 					Instantiate (pum2, transform.position, Quaternion.identity);
 					dieded1 = true;
 					Victor.pl1Win = false;
+					if (player1Selection == 6){
+						Instantiate (floorProp, transform.position, Quaternion.identity);
+						Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y), Quaternion.identity);
+						Instantiate (floorProp, new Vector2 (transform.position.x - 1, transform.position.y), Quaternion.identity);
+						Instantiate (floorProp, new Vector2 (transform.position.x, transform.position.y + 1), Quaternion.identity);
+						Instantiate (floorProp, new Vector2 (transform.position.x, transform.position.y - 1), Quaternion.identity);
+						Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y - 1), Quaternion.identity);
+					}
 					transform.position = new Vector2 (100, 100);
 					Invoke ("EndGame", 1f);
 				} else if ((win2temp < 2 && diededTemp == false)){

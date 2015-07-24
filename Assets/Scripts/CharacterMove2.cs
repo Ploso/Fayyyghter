@@ -102,6 +102,12 @@ public class CharacterMove2 : MonoBehaviour {
 			rb2d.gravityScale = 1.0f;
 			phMt.friction = 0.01f;
 			maxSpeed = 80000f;
+		} else if (player2Selection == 4) {
+			rb2d.gravityScale = 0.3f;
+			phMt.friction = 0.1f;
+			phMt.bounciness = 0.6f;
+			jumpForce = 4000f;
+			maxSpeed = 50000f;
 		} else if (player2Selection == 5) {
 			jumpForce = 8000f;
 			phMt.friction = 1f;
@@ -160,7 +166,7 @@ public class CharacterMove2 : MonoBehaviour {
 			rb2d.isKinematic = false;
 		}
 
-		if (Input.GetButtonDown("Jump2") && grounded && player2Charge >= jumpCost && Pauser.pause == false)
+		if (Input.GetButtonDown("Jump2") && grounded && player2Charge >= jumpCost && Pauser.pause == false && pause == false)
 		{
 			grounded = false;
 			doubleJump = true;
@@ -169,7 +175,7 @@ public class CharacterMove2 : MonoBehaviour {
 			energy2.value -= jumpCost;
 			anim.SetTrigger ("IsJumping");
 
-		} else if (Input.GetButtonDown("Jump2") && !grounded && doubleJump == true && player2Charge >= jumpCost && Pauser.pause == false){
+		} else if (Input.GetButtonDown("Jump2") && !grounded && doubleJump == true && player2Charge >= jumpCost && Pauser.pause == false && pause == false){
 			if (!infinijump){
 				doubleJump = false;
 			}
@@ -179,7 +185,7 @@ public class CharacterMove2 : MonoBehaviour {
 			energy2.value -= jumpCost;
 		}
 
-		if (Input.GetButtonDown("Fire2") && player2Charge >= boostCost && Pauser.pause == false){
+		if (Input.GetButtonDown("Fire2") && player2Charge >= boostCost && Pauser.pause == false && pause == false){
 			player2Charge = player2Charge - boostCost;
 			energy2.value -= boostCost;
 			anim.SetTrigger("Dash");
@@ -223,7 +229,7 @@ public class CharacterMove2 : MonoBehaviour {
 
 	void FixedUpdate()
 	{
-		if (ultraPause == false) {
+		if (ultraPause == false && pause == false) {
 			movex = Input.GetAxis ("Horizontal2");
 		}
 		if (ultraPause == false) {
@@ -295,6 +301,14 @@ public class CharacterMove2 : MonoBehaviour {
 					Instantiate (pum2, transform.position, Quaternion.identity);
 					dieded2 = true;
 					Victor.pl1Win = true;
+					if (player2Selection == 6){
+						Instantiate (floorProp, transform.position, Quaternion.identity);
+						Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y), Quaternion.identity);
+						Instantiate (floorProp, new Vector2 (transform.position.x - 1, transform.position.y), Quaternion.identity);
+						Instantiate (floorProp, new Vector2 (transform.position.x, transform.position.y + 1), Quaternion.identity);
+						Instantiate (floorProp, new Vector2 (transform.position.x, transform.position.y - 1), Quaternion.identity);
+						Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y - 1), Quaternion.identity);
+					}
 					transform.position = new Vector2 (100, 100);
 					Invoke ("EndGame", 1f);
 				} else if (win1temp < 2 && diededTemp == false){
@@ -309,7 +323,6 @@ public class CharacterMove2 : MonoBehaviour {
 						Instantiate (floorProp, new Vector2 (transform.position.x, transform.position.y + 1), Quaternion.identity);
 						Instantiate (floorProp, new Vector2 (transform.position.x, transform.position.y - 1), Quaternion.identity);
 						Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y - 1), Quaternion.identity);
-
 					}
 					transform.position = new Vector2 (100, 100);
 					Invoke ("EndRound", 1f);
