@@ -3,7 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class CharacterMove : MonoBehaviour {
-	
+
+//-----------------------------Variables----------------------------
+
 	public static bool facingRight;
 	[HideInInspector] public bool jump = false;
 	public float movex;
@@ -48,11 +50,15 @@ public class CharacterMove : MonoBehaviour {
 	public static int hitforce1;
 	private int hitforce2;
 
-//-----------------------------------------------------------------------
+	private bool blocker;
+
+//------------------------------Start (awake)-----------------------------------------
 
 	void Awake () 
 	{
 		ultraPause = true;
+
+		blocker = false;
 
 		movex = 0;
 
@@ -61,17 +67,6 @@ public class CharacterMove : MonoBehaviour {
 		StartCoroutine (Buffer ());
 
 		facingRight = false;
-/**
-		Vector3 theScale = transform.localScale;
-		if (player1Selection == 3) {
-			theScale.x *= -1;
-		} else {
-			if (theScale.x > 0) {
-				theScale.x *= -1;
-			}
-		}
-		transform.localScale = theScale;
-**/
 
 		movex = 0f;
 
@@ -86,12 +81,16 @@ public class CharacterMove : MonoBehaviour {
 
 		player1Selection = SelectionScrip.GetPl1Selection ();
 
+//-------------------------Character stats--------------------------
+
 		if (player1Selection == 1) {
 			infinijump = true;
 		}
 
-		if (player1Selection == 2) {
+		if (player1Selection == 1){
 			boostCost = 15f;
+		} else if (player1Selection == 2) {
+			boostCost = 10f;
 		} else if (player1Selection == 6) {
 			boostCost = 50f;
 		} else {
@@ -103,31 +102,45 @@ public class CharacterMove : MonoBehaviour {
 			jumpCost = 10f;
 		} 
 
-		if (player1Selection == 3) {
+
+		if (player1Selection == 2) {
+			rb2d.mass = 25;
+			rb2d.gravityScale = 0.6f;
+			phMt.friction = 0.1f;
+			phMt.bounciness = 0.6f;
+			jumpForce = 6000f;
+			maxSpeed = 50000f;
+		} else if (player1Selection == 3) {
 			rb2d.mass = 35;
-			phMt.bounciness = 0.80f;
-			jumpForce = 8000f;
 			rb2d.gravityScale = 1.0f;
 			phMt.friction = 0.01f;
+			phMt.bounciness = 0.7f;
+			jumpForce = 8000f;
 			maxSpeed = 80000f;
 		} else if (player1Selection == 4) {
+			rb2d.mass = 15;
 			rb2d.gravityScale = 0.3f;
 			phMt.friction = 0.1f;
 			phMt.bounciness = 0.6f;
-			jumpForce = 4000f;
-			maxSpeed = 50000f;
+			jumpForce = 3000f;
+			maxSpeed = 40000f;
 		} else if (player1Selection == 5) {
-			jumpForce = 8000f;
+			rb2d.mass = 10f;
+			rb2d.gravityScale = 1f;
 			phMt.friction = 1f;
 			phMt.bounciness = 0.6f;
-			maxSpeed = 50000f;
+			jumpForce = 4000f;
+			maxSpeed = 20000f;
 		} else if (player1Selection == 6) {
 			rb2d.mass = 5;
-			jumpForce = 2000f;
+			rb2d.gravityScale = 1f;
 			phMt.friction = 0.1f;
 			phMt.bounciness = 0.3f;
+			jumpForce = 2000f;
 			maxSpeed = 10000f;
 		} else {
+			rb2d.mass = 20;
+			rb2d.gravityScale = 1f;
 			phMt.friction = 0.1f;
 			phMt.bounciness = 0.6f;
 			jumpForce = 6000f;
@@ -144,7 +157,7 @@ public class CharacterMove : MonoBehaviour {
 		if (player1Selection == 1) {
 			hitforce1 = 20000;
 		} else if (player1Selection == 2) {
-			hitforce1 = 8000;
+			hitforce1 = 5000;
 		} else if (player1Selection == 3) {
 			hitforce1 = 15000;
 		} else if (player1Selection == 5) {
@@ -153,20 +166,26 @@ public class CharacterMove : MonoBehaviour {
 			hitforce1 = 10000;
 		}
 
-		blockCost = 50f;
+		if (player1Selection == 2) {
+			blockCost = 0.5f;
+		} else if (player1Selection == 4) {
+			blockCost = 1f;
+		} else {
+			blockCost = 1.5f;
+		}
 
 		ultraPause = false;
 	}
 
 
-//------------------------------------------------------------------------------------
+//---------------------------------------Update----------------------------------------------
 
 
 	void Update () 
 	{
 
 
-		if (pause == true) {
+		if (blocker == true) {
 			anim.SetBool ("Block", true);
 			rb2d.isKinematic = true;
 		} else {
@@ -198,7 +217,6 @@ public class CharacterMove : MonoBehaviour {
 			player1Charge = player1Charge - boostCost;
 			energy1.value -= boostCost;
 			anim.SetTrigger("Dash");
-			//StartCoroutine (HitPause());
 			if (facingRight == true){
 				if (player1Selection == 6) {
 					Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y), Quaternion.identity);
@@ -224,16 +242,23 @@ public class CharacterMove : MonoBehaviour {
 			energy1.value += 0.25f;
 		}
 
-		if (Input.GetButtonDown ("Block1") && player1Charge >= blockCost && Pauser.pause == false) {
-			player1Charge = player1Charge - blockCost;
-			energy1.value -= blockCost;
-			StartCoroutine (WaitBool(1));
+		if (Input.GetButton ("Block1") && pause == false) {
+			if (player1Charge >= blockCost && Pauser.pause == false) {
+				blocker = true;
+				player1Charge = player1Charge - blockCost;
+				energy1.value -= blockCost;
+			} else {
+				Instantiate (pum, transform.position, Quaternion.identity);
+				StartCoroutine (WaitBool (2));
+			}
+		} else {
+			blocker = false;
 		}
 
 	}
 
 
-//------------------------------------------------------------------------------
+//-------------------------------Fixed Update---------------------------------------------
 
 
 	void FixedUpdate()
@@ -261,7 +286,7 @@ public class CharacterMove : MonoBehaviour {
 	}
 
 
-//-------------------------------------------------------------------------------	
+//-----------------------------Methods----------------------------------------------
 
 
 	void Flip()
@@ -273,6 +298,33 @@ public class CharacterMove : MonoBehaviour {
 			transform.localScale = theScale;
 		}
 	}
+
+	void EndRound()
+	{
+		facingRight = false;
+		ultraPause = true;
+		Destroy (gameObject);
+		Application.LoadLevel(1);
+	}
+	
+	void EndGame()
+	{
+		ultraPause = true;
+		Application.LoadLevel(2);
+		Destroy (gameObject);
+	}
+
+	public static bool GetFacingRight ()
+	{
+		return facingRight;
+	}
+
+	public static int GetHit1()
+	{
+		return hitforce1;
+	}
+
+//------------------------------Collision detection---------------------------------
 
 	void OnCollisionEnter2D (Collision2D col)
 	{
@@ -343,32 +395,16 @@ public class CharacterMove : MonoBehaviour {
 
 	}
 
-	void EndRound()
-	{
-		facingRight = false;
-		ultraPause = true;
-		Destroy (gameObject);
-		Application.LoadLevel(1);
-	}
-	
-	void EndGame()
-	{
-		ultraPause = true;
-		Application.LoadLevel(2);
-		Destroy (gameObject);
-	}
+//-------------------------------Coroutines------------------------------------
 
 	public IEnumerator WaitBool (int delay)
 	{
+		blocker = false;
 		pause = true;
 		yield return new WaitForSeconds (delay);
 		pause = false;
 	}
-
-	public static bool GetFacingRight ()
-	{
-		return facingRight;
-	}
+	
 
 	public IEnumerator Buffer()
 	{
@@ -381,11 +417,7 @@ public class CharacterMove : MonoBehaviour {
 		yield return new WaitForSeconds (0.5f);
 		isHitting = false;
 	}
-
-	public static int GetHit1()
-	{
-		return hitforce1;
-	}
+	
 
 
 }

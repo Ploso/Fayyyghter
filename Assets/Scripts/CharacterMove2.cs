@@ -3,7 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class CharacterMove2 : MonoBehaviour {
-	
+
+//-----------------------Variables----------------------
+
 	public static bool facingRight = false;
 	[HideInInspector] public bool jump = false;
 	public float movex;
@@ -49,7 +51,9 @@ public class CharacterMove2 : MonoBehaviour {
 	public static int hitforce2;
 	private int hitforce1;
 
-//---------------------------------------------------------------------------
+	private bool blocker;
+
+//---------------------------Start (awake)------------------------------------
 
 	void Awake () 
 	{
@@ -78,12 +82,16 @@ public class CharacterMove2 : MonoBehaviour {
 
 		player2Selection = SelectionScrip.GetPl2Selection ();
 
+//--------------------------------Character stats----------------------------------------
+
 		if (player2Selection == 1){
 			infinijump = true;
 		}
 
-		if (player2Selection == 2){
+		if (player2Selection == 1){
 			boostCost = 15f;
+		} else if (player2Selection == 2) {
+			boostCost = 10f;
 		} else if (player2Selection == 6) {
 			boostCost = 50f;
 		} else{
@@ -95,31 +103,44 @@ public class CharacterMove2 : MonoBehaviour {
 			jumpCost = 10f;
 		} 
 
-		if (player2Selection == 3) {
+		if (player2Selection == 2) {
+			rb2d.mass = 25;
+			rb2d.gravityScale = 0.6f;
+			phMt.friction = 0.1f;
+			phMt.bounciness = 0.6f;
+			jumpForce = 6000f;
+			maxSpeed = 50000f;
+		} else if (player2Selection == 3) {
 			rb2d.mass = 35;
-			phMt.bounciness = 0.80f;
-			jumpForce = 8000f;
 			rb2d.gravityScale = 1.0f;
 			phMt.friction = 0.01f;
+			phMt.bounciness = 0.7f;
+			jumpForce = 8000f;
 			maxSpeed = 80000f;
 		} else if (player2Selection == 4) {
+			rb2d.mass = 15;
 			rb2d.gravityScale = 0.3f;
 			phMt.friction = 0.1f;
 			phMt.bounciness = 0.6f;
-			jumpForce = 4000f;
-			maxSpeed = 50000f;
+			jumpForce = 3000f;
+			maxSpeed = 40000f;
 		} else if (player2Selection == 5) {
-			jumpForce = 8000f;
+			rb2d.mass = 10f;
+			rb2d.gravityScale = 1f;
 			phMt.friction = 1f;
 			phMt.bounciness = 0.6f;
-			maxSpeed = 50000f;
+			jumpForce = 4000f;
+			maxSpeed = 20000f;
 		} else if (player2Selection == 6) {
 			rb2d.mass = 5;
-			jumpForce = 2000f;
+			rb2d.gravityScale = 1f;
 			phMt.friction = 0.1f;
 			phMt.bounciness = 0.3f;
+			jumpForce = 2000f;
 			maxSpeed = 10000f;
 		} else {
+			rb2d.mass = 20;
+			rb2d.gravityScale = 1f;
 			phMt.friction = 0.1f;
 			phMt.bounciness = 0.6f;
 			jumpForce = 6000f;
@@ -136,7 +157,7 @@ public class CharacterMove2 : MonoBehaviour {
 		if (player2Selection == 1) {
 			hitforce2 = 20000;
 		} else if (player2Selection == 2) {
-			hitforce2 = 8000;
+			hitforce2 = 5000;
 		} else if (player2Selection == 3) {
 			hitforce2 = 15000;
 		} else if (player2Selection == 5) {
@@ -145,20 +166,26 @@ public class CharacterMove2 : MonoBehaviour {
 			hitforce2 = 10000;
 		}
 
-		blockCost = 50f;
+		if (player2Selection == 2) {
+			blockCost = 0.5f;
+		} else if (player2Selection == 4) {
+			blockCost = 1f;
+		} else {
+			blockCost = 1.5f;
+		}
 
 		ultraPause = false;
 
 	}
 
 
-//------------------------------------------------------------------------------------	
+//-----------------------------------Update-------------------------------------------------	
 
 
 	void Update () 
 	{
 		
-		if (pause == true) {
+		if (blocker == true) {
 			anim.SetBool ("Block", true);
 			rb2d.isKinematic = true;
 		} else {
@@ -189,7 +216,6 @@ public class CharacterMove2 : MonoBehaviour {
 			player2Charge = player2Charge - boostCost;
 			energy2.value -= boostCost;
 			anim.SetTrigger("Dash");
-			//StartCoroutine (HitPause());
 			if (facingRight == true){
 				if (player2Selection == 6) {
 					Instantiate (floorProp, new Vector2 (transform.position.x + 1, transform.position.y), Quaternion.identity);
@@ -215,16 +241,23 @@ public class CharacterMove2 : MonoBehaviour {
 			energy2.value += 0.25f;
 		}
 
-		if (Input.GetButtonDown ("Block2") && player2Charge >= blockCost && Pauser.pause == false) {
-			player2Charge = player2Charge - blockCost;
-			energy2.value -= blockCost;
-			StartCoroutine (WaitBool(1));
+		if (Input.GetButton ("Block2") && pause == false) {
+			if (player2Charge >= blockCost && Pauser.pause == false) {
+				blocker = true;
+				player2Charge = player2Charge - blockCost;
+				energy2.value -= blockCost;
+			} else {
+				Instantiate (pum, transform.position, Quaternion.identity);
+				StartCoroutine (WaitBool (2));
+			}
+		} else {
+			blocker = false;
 		}
 
 	}
 
 
-//-------------------------------------------------------------------------------------
+//----------------------------------------FixedUpdate---------------------------------------------
 
 
 	void FixedUpdate()
@@ -252,7 +285,7 @@ public class CharacterMove2 : MonoBehaviour {
 	}
 
 
-//-------------------------------------------------------------------------------------
+//--------------------------------------Methods-----------------------------------------------
 
 
 	void Flip()
@@ -264,7 +297,33 @@ public class CharacterMove2 : MonoBehaviour {
 			transform.localScale = theScale;
 		}
 	}
+
+	void EndRound()
+	{
+		ultraPause = true;
+		Destroy (gameObject);
+		Application.LoadLevel(1);
+	}
 	
+	void EndGame()
+	{
+		ultraPause = true;
+		Application.LoadLevel(2);
+		Destroy (gameObject);
+	}
+
+	public static bool GetFacingRight ()
+	{
+		return facingRight;
+	}
+
+	public static int GetHit2 ()
+	{
+		return hitforce2;
+	}
+
+//-------------------------------Collision detection-------------------------------------
+
 	void OnCollisionEnter2D (Collision2D col)
 	{
 		bool temp;
@@ -336,31 +395,16 @@ public class CharacterMove2 : MonoBehaviour {
 
 	}
 
-	void EndRound()
-	{
-		ultraPause = true;
-		Destroy (gameObject);
-		Application.LoadLevel(1);
-	}
-
-	void EndGame()
-	{
-		ultraPause = true;
-		Application.LoadLevel(2);
-		Destroy (gameObject);
-	}
+//---------------------------------Coroutines-------------------------------
 
 	public IEnumerator WaitBool (int delay)
 	{
+		blocker = false;
 		pause = true;
 		yield return new WaitForSeconds (delay);
 		pause = false;
 	}
-	
-	public static bool GetFacingRight ()
-	{
-		return facingRight;
-	}
+
 
 	public IEnumerator Buffer()
 	{
@@ -374,8 +418,4 @@ public class CharacterMove2 : MonoBehaviour {
 		isHitting = false;
 	}
 
-	public static int GetHit2 ()
-	{
-		return hitforce2;
-	}
 }
