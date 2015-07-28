@@ -93,7 +93,7 @@ public class CharacterMove2 : MonoBehaviour {
 		} else if (player2Selection == 2) {
 			boostCost = 10f;
 		} else if (player2Selection == 6) {
-			boostCost = 50f;
+			boostCost = 40f;
 		} else{
 			boostCost = 20f;
 		} 
@@ -133,10 +133,10 @@ public class CharacterMove2 : MonoBehaviour {
 			maxSpeed = 20000f;
 		} else if (player2Selection == 6) {
 			rb2d.mass = 5;
-			rb2d.gravityScale = 1f;
+			rb2d.gravityScale = 1.5f;
 			phMt.friction = 0.1f;
 			phMt.bounciness = 0.3f;
-			jumpForce = 2000f;
+			jumpForce = 3000f;
 			maxSpeed = 10000f;
 		} else {
 			rb2d.mass = 20;
@@ -241,14 +241,14 @@ public class CharacterMove2 : MonoBehaviour {
 			energy2.value += 0.25f;
 		}
 
-		if (Input.GetButton ("Block2") && pause == false) {
+		if (Input.GetButton ("Block2") && pause == false && ultraPause == false) {
 			if (player2Charge >= blockCost && Pauser.pause == false) {
 				blocker = true;
 				player2Charge = player2Charge - blockCost;
 				energy2.value -= blockCost;
 			} else {
 				Instantiate (pum, transform.position, Quaternion.identity);
-				StartCoroutine (WaitBool (2));
+				StartCoroutine (Stun (2));
 			}
 		} else {
 			blocker = false;
@@ -330,11 +330,13 @@ public class CharacterMove2 : MonoBehaviour {
 		hitforce1 = CharacterMove.GetHit1 ();
 		temp = CharacterMove.GetFacingRight ();
 
-		if (col.gameObject.tag == "Hitter1") {
+		if (col.gameObject.tag == "Hitter1" && rb2d.isKinematic == false) {
 			if (temp == true){
 				rb2d.AddForce(new Vector2(hitforce1, 0f));
+				StartCoroutine (Stun(0.1f));
 			} else if (temp == false){
 				rb2d.AddForce(new Vector2(-hitforce1, 0f));
+				StartCoroutine (Stun(0.1f));
 			}
 		}
 
@@ -397,7 +399,7 @@ public class CharacterMove2 : MonoBehaviour {
 
 //---------------------------------Coroutines-------------------------------
 
-	public IEnumerator WaitBool (int delay)
+	public IEnumerator WaitBool (float delay)
 	{
 		blocker = false;
 		pause = true;
@@ -416,6 +418,15 @@ public class CharacterMove2 : MonoBehaviour {
 		isHitting = true;
 		yield return new WaitForSeconds (0.5f);
 		isHitting = false;
+	}
+
+	public IEnumerator Stun (float delay)
+	{
+		pause = true;
+		ultraPause = true;
+		yield return new WaitForSeconds (delay);
+		pause = false;
+		ultraPause = false;
 	}
 
 }

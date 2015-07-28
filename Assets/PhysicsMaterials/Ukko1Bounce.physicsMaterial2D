@@ -7,4 +7,4 @@ PhysicsMaterial2D:
   m_PrefabInternal: {fileID: 0}
   m_Name: Ukko1Bounce
   friction: .100000001
-  bounciness: .600000024
+  bounciness: .300000012

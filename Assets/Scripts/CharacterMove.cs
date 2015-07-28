@@ -92,7 +92,7 @@ public class CharacterMove : MonoBehaviour {
 		} else if (player1Selection == 2) {
 			boostCost = 10f;
 		} else if (player1Selection == 6) {
-			boostCost = 50f;
+			boostCost = 40f;
 		} else {
 			boostCost = 20f;
 		} 
@@ -133,10 +133,10 @@ public class CharacterMove : MonoBehaviour {
 			maxSpeed = 20000f;
 		} else if (player1Selection == 6) {
 			rb2d.mass = 5;
-			rb2d.gravityScale = 1f;
+			rb2d.gravityScale = 1.5f;
 			phMt.friction = 0.1f;
 			phMt.bounciness = 0.3f;
-			jumpForce = 2000f;
+			jumpForce = 3000f;
 			maxSpeed = 10000f;
 		} else {
 			rb2d.mass = 20;
@@ -235,6 +235,7 @@ public class CharacterMove : MonoBehaviour {
 					rb2d.AddForce(new Vector2(-jumpForce * 2, 0f));
 				}
 			}
+
 		}
 
 		if (player1Charge < 100) {
@@ -242,19 +243,18 @@ public class CharacterMove : MonoBehaviour {
 			energy1.value += 0.25f;
 		}
 
-		if (Input.GetButton ("Block1") && pause == false) {
+		if (Input.GetButton ("Block1") && pause == false && ultraPause == false) {
 			if (player1Charge >= blockCost && Pauser.pause == false) {
 				blocker = true;
 				player1Charge = player1Charge - blockCost;
 				energy1.value -= blockCost;
 			} else {
 				Instantiate (pum, transform.position, Quaternion.identity);
-				StartCoroutine (WaitBool (2));
+				StartCoroutine (Stun (2));
 			}
 		} else {
 			blocker = false;
 		}
-
 	}
 
 
@@ -332,11 +332,13 @@ public class CharacterMove : MonoBehaviour {
 		hitforce2 = CharacterMove2.GetHit2 ();
 		temp = CharacterMove2.GetFacingRight ();
 
-		if (col.gameObject.tag == "Hitter2") {
+		if (col.gameObject.tag == "Hitter2" && rb2d.isKinematic == false) {
 			if (temp == true){
 				rb2d.AddForce(new Vector2(hitforce2, 0f));
+				StartCoroutine (Stun(0.1f));
 			} else if (temp == false){
 				rb2d.AddForce(new Vector2(-hitforce2, 0f));
+				StartCoroutine (Stun(0.1f));
 			}
 		}
 
@@ -397,7 +399,7 @@ public class CharacterMove : MonoBehaviour {
 
 //-------------------------------Coroutines------------------------------------
 
-	public IEnumerator WaitBool (int delay)
+	public IEnumerator WaitBool (float delay)
 	{
 		blocker = false;
 		pause = true;
@@ -418,6 +420,13 @@ public class CharacterMove : MonoBehaviour {
 		isHitting = false;
 	}
 	
-
+	public IEnumerator Stun (float delay)
+	{
+		pause = true;
+		ultraPause = true;
+		yield return new WaitForSeconds (delay);
+		pause = false;
+		ultraPause = false;
+	}
 
 }
