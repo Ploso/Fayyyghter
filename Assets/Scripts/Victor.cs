@@ -37,7 +37,9 @@ public class Victor : MonoBehaviour {
 
 	public void toReMatch()
 	{
-		Application.LoadLevel (1);
+		int temp;
+		temp = SelectionScrip.GetLevel ();
+		Application.LoadLevel (temp);
 		Spawner.SetWin1(0);
 		Spawner2.SetWin2(0);
 	}

@@ -11,6 +11,9 @@ public class SelectionScrip : MonoBehaviour {
 	public Button hero5;
 	public Button hero6;
 
+	public Button stage1;
+	public Button stage2;
+
 	public Text selectingPlayer;
 
 	public bool hero1Selected;
@@ -39,6 +42,7 @@ public class SelectionScrip : MonoBehaviour {
 	public AudioSource s_drake;
 	public AudioSource s_skeletal;
 
+	public static int selectedStage;
 
 	void Start () {
 		hero1Selected = false;
@@ -47,10 +51,20 @@ public class SelectionScrip : MonoBehaviour {
 		hero4Selected = false;
 		hero5Selected = false;
 		hero6Selected = false;
+
+		selectedStage = 1;
 	}
 	
 
 	void Update () {
+
+		if (selectedStage == 1) {
+			stage1.interactable = false;
+			stage2.interactable = true;
+		} else if (selectedStage == 5) {
+			stage2.interactable = false;
+			stage1.interactable = true;
+		}
 
 		if (hero1Selected == true) {
 			hero1.interactable = false;
@@ -181,6 +195,16 @@ public class SelectionScrip : MonoBehaviour {
 		}
 	}
 
+	public void Stage1Select ()
+	{
+		selectedStage = 1;
+	}
+
+	public void Stage2Select ()
+	{
+		selectedStage = 5;
+	}
+
 	public static int GetPl1Selection()
 	{
 		return player1Selection;
@@ -189,8 +213,12 @@ public class SelectionScrip : MonoBehaviour {
 	{
 		return player2Selection;
 	}
+	public static int GetLevel()
+	{
+		return selectedStage;
+	}
 	public void GameOn()
 	{
-		Application.LoadLevel(1);
+		Application.LoadLevel(selectedStage);
 	}
 }

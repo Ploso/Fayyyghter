@@ -7,6 +7,7 @@ public class MenuScript : MonoBehaviour {
 	public Button startGame;
 	public Button quitGame;
 	public Button info;
+	public static bool bumaus = false;
 
 	void Start () {
 		startGame = startGame.GetComponent<Button> ();
@@ -34,5 +35,14 @@ public class MenuScript : MonoBehaviour {
 		
 	}
 
+	public static bool GetBum ()
+	{
+		return bumaus;
+	}
+
+	public static void SetBum(bool temp)
+	{
+		bumaus = temp;
+	}
 
 }

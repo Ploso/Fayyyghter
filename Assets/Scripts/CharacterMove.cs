@@ -83,7 +83,7 @@ public class CharacterMove : MonoBehaviour {
 
 //-------------------------Character stats--------------------------
 
-		if (player1Selection == 1) {
+		if (player1Selection == 1 || player1Selection == 4) {
 			infinijump = true;
 		}
 
@@ -143,7 +143,7 @@ public class CharacterMove : MonoBehaviour {
 			rb2d.gravityScale = 1f;
 			phMt.friction = 0.1f;
 			phMt.bounciness = 0.6f;
-			jumpForce = 6000f;
+			jumpForce = 8000f;
 			maxSpeed = 50000f;
 		}
 
@@ -163,7 +163,7 @@ public class CharacterMove : MonoBehaviour {
 		} else if (player1Selection == 5) {
 			hitforce1 = 30000;
 		} else {
-			hitforce1 = 10000;
+			hitforce1 = 16000;
 		}
 
 		if (player1Selection == 2) {
@@ -301,10 +301,12 @@ public class CharacterMove : MonoBehaviour {
 
 	void EndRound()
 	{
+		int temp;
+		temp = SelectionScrip.GetLevel ();
 		facingRight = false;
 		ultraPause = true;
 		Destroy (gameObject);
-		Application.LoadLevel(1);
+		Application.LoadLevel(temp);
 	}
 	
 	void EndGame()
